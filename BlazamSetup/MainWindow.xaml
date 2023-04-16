@@ -1,0 +1,25 @@
+﻿<Window x:Class="BlazamSetup.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BlazamSetup"
+        mc:Ignorable="d"
+        Title="Blazam Setup" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="283*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="/banner.jpg" Margin="0,0,54,0" Stretch="UniformToFill" Height="NaN" Width="NaN"/>
+        <TextBlock Text="Blazam Web Installer" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="161" Foreground="White" FontWeight="Bold" FontSize="18"  Height="48" FontStretch="Medium" TextAlignment="Center"/>
+        <Frame NavigationUIVisibility="Hidden" Content="Frame" Margin="180,0,0,50" Width="NaN" x:Name="Frame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2"/>
+        <DockPanel Margin="180,0,0,0" VerticalAlignment="Bottom" Height="50" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+            <Button x:Name="NextButton" Content="Next" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="NextButton_Click"/>
+
+            <Button x:Name="BackButton" Content="Back" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="BackButton_Click" />
+
+        </DockPanel>
+
+    </Grid>
+</Window>
