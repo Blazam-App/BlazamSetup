@@ -57,7 +57,9 @@ namespace BlazamSetup.Steps
 
                 CurrentDispatcher.Invoke(() => {
                     DownloadingNote.Visibility = Visibility.Hidden;
+                    FinishedNote.Visibility = Visibility.Visible;
                     MainWindow.EnableNext();
+                    NavigationManager.Next();
                 });
 
 

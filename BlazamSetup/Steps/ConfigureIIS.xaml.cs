@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,6 +30,29 @@ namespace BlazamSetup.Steps
         IInstallationStep IInstallationStep.NextStep()
         {
             throw new NotImplementedException();
+        }
+
+        private void ChooseCertificateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var store = new X509Store("MY", System.Security.Cryptography.X509Certificates.StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                var collection = store.Certificates;
+                var certs = X509Certificate2UI.SelectFromCollection(collection, "Select", "Select a certificate to sign", X509SelectionFlag.SingleSelection);
+                if (certs.Count > 0)
+                {
+                    InstallationConfiguraion.SSLCert = certs[0];
+                    HTTPSHelpLabel.Visibility=Visibility.Hidden;
+                    HTTPSPortTextBox.IsEnabled=true;
+                    sslCertLabel.Content = InstallationConfiguraion.SSLCert.FriendlyName;
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                sslCertLabel.Content = ex.Message;
+            }
         }
     }
 }

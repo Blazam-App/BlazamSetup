@@ -5,8 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BlazamSetup.Steps"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
-            
+        <local:StepTitle Title="Service Setup"/>
+
+        <Label Content="Listening Address" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="FQDNTextBox" HorizontalAlignment="Left" Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="HTTP Port" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="HTTPPortTextBox" Text="80" HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label Content="HTTPS Port" HorizontalAlignment="Left" Margin="10,153,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="HTTPSPortTextBox" Text="443" HorizontalAlignment="Left" Margin="10,179,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label Content="SSL Certificates are configured from within the web application" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </UserControl>

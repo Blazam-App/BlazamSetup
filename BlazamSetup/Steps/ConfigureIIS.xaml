@@ -8,5 +8,17 @@
              d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
         <local:StepTitle Title="IIS Setup"/>
+        <Label Content="Website FQDN" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="FQDNTextBox" HorizontalAlignment="Left" Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="HTTP Port" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="HTTPPortTextBox" Text="80" HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label Content="SSL Certificate" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top"/>
+        <Button Content="Choose Certificate" HorizontalAlignment="Left" Margin="10,174,0,0" VerticalAlignment="Top" Click="ChooseCertificateButton_Click"/>
+        <Label x:Name="sslCertLabel" Content="" HorizontalAlignment="Left" Margin="120,171,0,0" VerticalAlignment="Top"/>
+        <Label Content="HTTPS Port" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top"/>
+        <TextBox IsEnabled="False" x:Name="HTTPSPortTextBox" Text="443" HorizontalAlignment="Left" Margin="10,232,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="HTTPSHelpLabel" Content="You must choose a certificate to use SSL" HorizontalAlignment="Left" Margin="135,229,0,0" VerticalAlignment="Top" FontSize="10"/>
+
     </Grid>
 </UserControl>

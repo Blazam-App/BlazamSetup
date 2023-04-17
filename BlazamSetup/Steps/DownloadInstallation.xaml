@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
-        <ProgressBar x:Name="DownloadProgressBar" HorizontalAlignment="Center" Height="10" Margin="0,244,0,0" VerticalAlignment="Top" Width="556"/>
-        <Label x:Name="DownloadingNote" Content="Please wait while the installer downloads the latest version of Blazam..." HorizontalAlignment="Center" Margin="0,199,0,0" VerticalAlignment="Top" />
+        <ProgressBar x:Name="DownloadProgressBar" Height="10" Margin="50,20,50,0" HorizontalAlignment="Stretch"/>
+        <Label x:Name="DownloadingNote" Content="Please wait while the installer downloads the latest version of Blazam..." HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,20" />
+        <Label x:Name="FinishedNote" Content="Download complete. Click Next to proceed." Margin="0,0,0,20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden" />
     </Grid>
 </UserControl>

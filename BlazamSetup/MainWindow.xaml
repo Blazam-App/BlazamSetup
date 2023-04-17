@@ -5,15 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlazamSetup"
         mc:Ignorable="d"
-        Title="Blazam Setup" Height="450" Width="800">
+        Title="Blazam Setup" Height="450" Width="600"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="117*"/>
-            <ColumnDefinition Width="283*"/>
+            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Source="/banner.jpg" Margin="0,0,54,0" Stretch="UniformToFill" Height="NaN" Width="NaN"/>
-        <TextBlock Text="Blazam Web Installer" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="161" Foreground="White" FontWeight="Bold" FontSize="18"  Height="48" FontStretch="Medium" TextAlignment="Center"/>
-        <Frame NavigationUIVisibility="Hidden" Content="Frame" Margin="180,0,0,50" Width="NaN" x:Name="Frame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2"/>
+        <Image Source="/banner.jpg" Stretch="UniformToFill" Height="NaN" Width="125
+               " HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5"/>
+        <TextBlock Text="Blazam Web Installer" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125
+                   
+                   " Foreground="White" FontWeight="Bold" FontSize="18"  Height="48" FontStretch="Medium" TextAlignment="Center"/>
+        <Frame NavigationUIVisibility="Hidden" Content="Frame" Margin="125,0,0,50" Width="NaN" x:Name="Frame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2"/>
         <DockPanel Margin="180,0,0,0" VerticalAlignment="Bottom" Height="50" Grid.ColumnSpan="2" HorizontalAlignment="Right">
             <Button x:Name="NextButton" Content="Next" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="NextButton_Click"/>
 
