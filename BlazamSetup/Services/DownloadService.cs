@@ -65,7 +65,8 @@ namespace BlazamSetup.Services
                             using (var streamToWriteTo = File.OpenWrite(UpdateFile))
                             {
                                 ExpectedSize = (int)latestRelease.Size;
-                                var buffer = new byte[4096];
+                                var buffer = new byte[262144];
+                                //var buffer = new byte[4096];
                                 int bytesRead;
                                 int totalBytesRead = 0;
 

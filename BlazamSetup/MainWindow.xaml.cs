@@ -82,6 +82,19 @@ namespace BlazamSetup
 
         }
 
-      
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.Current.Shutdown();
+        }
+
+        private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            App.Current.MainWindow.DragMove();
+        }
     }
 }

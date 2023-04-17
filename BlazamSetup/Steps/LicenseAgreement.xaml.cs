@@ -31,8 +31,17 @@ namespace BlazamSetup.Steps
             try
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("license.rtf"));
-                LicenseTextBox.Selection.Load(reader.BaseStream, DataFormats.Rtf);
+                var license = BlazamSetup.Properties.Resources.license;
+                //var resource =FindResource("license");
+                //resource = FindResource("license");
+               // var result =  reader.ReadToEnd();
+               MemoryStream ms = new MemoryStream();
+                foreach(var bite in  license)
+                {
+                    ms.WriteByte((byte)bite);
+                }
+
+                LicenseTextBox.Selection.Load(ms, DataFormats.Rtf);
             }
             catch
             {
@@ -40,6 +49,15 @@ namespace BlazamSetup.Steps
             }
 
         }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            base.OnVisualParentChanged(oldParent);
+            if(oldParent==null)
+            MainWindow.NextStepButton.Content = "I Agree";
+
+        }
+
 
         IInstallationStep IInstallationStep.NextStep()
         {

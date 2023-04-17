@@ -45,7 +45,7 @@ namespace BlazamSetup.Steps
             switch (InstallationConfiguraion.InstallationType)
             {
                 case InstallType.IIS:
-                    return new ConfigureIIS();
+                    return new IISPrerequisiteCheck();
                 case InstallType.Service:
                     return new ConfigureService();
             }

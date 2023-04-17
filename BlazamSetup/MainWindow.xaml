@@ -6,24 +6,70 @@
         xmlns:local="clr-namespace:BlazamSetup"
         mc:Ignorable="d"
         Title="Blazam Setup" Height="450" Width="600"
-        ResizeMode="NoResize">
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Image Source="/banner.jpg" Stretch="UniformToFill" Height="NaN" Width="125
-               " HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock Text="Blazam Web Installer" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125
-                   
-                   " Foreground="White" FontWeight="Bold" FontSize="18"  Height="48" FontStretch="Medium" TextAlignment="Center"/>
-        <Frame NavigationUIVisibility="Hidden" Content="Frame" Margin="125,0,0,50" Width="NaN" x:Name="Frame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2"/>
-        <DockPanel Margin="180,0,0,0" VerticalAlignment="Bottom" Height="50" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-            <Button x:Name="NextButton" Content="Next" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="NextButton_Click"/>
 
-            <Button x:Name="BackButton" Content="Back" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="BackButton_Click" />
+        <DockPanel HorizontalAlignment="Stretch"
+                  Background="DarkBlue"
+                   MouseDown="DockPanel_MouseDown"
+           VerticalAlignment="Top"
+           LastChildFill="True" Height="25">
+            <Grid DockPanel.Dock="Left">
 
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/default_logo2.png" />
+                    <Label Foreground="White" Content="Blazam Setup" Padding="5,0,5,0" Margin="0,0,0,0" VerticalContentAlignment="Center"/>
+
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Right"
+                  >
+
+                <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                    <Button Background="Transparent" BorderThickness="0"  Click="MinimizeButton_Click">
+
+                        <Image x:Name="MinimizeButton"
+                            KeyboardNavigation.IsTabStop="False"
+                            Width="20" Height="20"
+                    
+                           Panel.ZIndex="1"
+                            Source="/Resources/minimize.png"
+                            />
+                    </Button>
+                    <Button  Background="Transparent" BorderThickness="0" Click="CloseButton_Click">
+                        <Image x:Name="CloseButton"
+                             KeyboardNavigation.IsTabStop="False"
+                            Width="20" Height="20"
+                           Panel.ZIndex="1"
+                           
+                            Source="/Resources/close.png"
+                            />
+                    </Button>
+
+
+                </StackPanel>
+            </Grid>
         </DockPanel>
+        <Grid Margin="0,25,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="/banner.jpg" Stretch="UniformToFill" Height="NaN" Width="125" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5"/>
+            <TextBlock Text="Blazam Web Installer" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125 " Foreground="White" FontWeight="Bold" FontSize="18"  Height="48" FontStretch="Medium" TextAlignment="Center"/>
+            <Frame NavigationUIVisibility="Hidden" Content="Frame" Margin="125,0,0,50" Width="NaN" x:Name="Frame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2"/>
+            <DockPanel Margin="180,0,0,0" VerticalAlignment="Bottom" Height="50" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+                <Button x:Name="NextButton" Content="Next" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="NextButton_Click"/>
 
+                <Button x:Name="BackButton" Content="Back" Width="75" HorizontalAlignment="Right" DockPanel.Dock="Right" Margin="0,10,10,10" Click="BackButton_Click" />
+
+            </DockPanel>
+
+        </Grid>
     </Grid>
+
 </Window>
