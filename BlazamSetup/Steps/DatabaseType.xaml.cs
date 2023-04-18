@@ -58,7 +58,15 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            throw new NotImplementedException();
+            switch (InstallationConfiguraion.DatabaseType)
+            {
+                case DBType.SQL:
+                case DBType.MySQL:
+                    return new ConfigureDatabaseConnection();
+                case DBType.Sqlite:
+                    return null;
+            }
+            return this;
         }
     }
 }

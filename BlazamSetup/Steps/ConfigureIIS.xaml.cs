@@ -42,10 +42,10 @@ namespace BlazamSetup.Steps
                 var certs = X509Certificate2UI.SelectFromCollection(collection, "Select", "Select a certificate to sign", X509SelectionFlag.SingleSelection);
                 if (certs.Count > 0)
                 {
-                    InstallationConfiguraion.SSLCert = certs[0];
+                    InstallationConfiguraion.WebHostConfiguration.SSLCert = certs[0];
                     HTTPSHelpLabel.Visibility=Visibility.Hidden;
                     HTTPSPortTextBox.IsEnabled=true;
-                    sslCertLabel.Content = InstallationConfiguraion.SSLCert.FriendlyName;
+                    sslCertLabel.Content = InstallationConfiguraion.WebHostConfiguration.SSLCert.FriendlyName;
                     
                 }
             }

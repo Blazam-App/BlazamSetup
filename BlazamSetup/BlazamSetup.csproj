@@ -105,11 +105,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FolderPicker.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="InstallationConfiguraion.cs" />
     <Compile Include="Services\ApplicationUpdateException.cs" />
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\PrerequisiteChecker.cs" />
+    <Compile Include="Steps\ConfigureDatabaseConnection.xaml.cs">
+      <DependentUpon>ConfigureDatabaseConnection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Steps\ConfigureIIS.xaml.cs">
       <DependentUpon>ConfigureIIS.xaml</DependentUpon>
     </Compile>
@@ -156,6 +160,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Steps\ConfigureDatabaseConnection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Steps\ConfigureIIS.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
