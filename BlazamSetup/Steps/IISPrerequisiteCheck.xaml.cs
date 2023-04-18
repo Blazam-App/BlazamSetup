@@ -1,5 +1,7 @@
-﻿using System;
+﻿using BlazamSetup.Services;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BlazamSetup.Steps
@@ -22,41 +25,43 @@ namespace BlazamSetup.Steps
     public partial class IISPrerequisiteCheck : UserControl, IInstallationStep
     {
         public bool FrameworkInstalled { get; set; }
+        public Dispatcher CurrentDispatcher { get; }
+
         public IISPrerequisiteCheck()
         {
             InitializeComponent();
+            CurrentDispatcher = Dispatcher;
             DataContext = this;
-            CheckForAspCore();
+            CheckForAspCoreHosting();
         }
-
-        void CheckForAspCore()
+       
+        void CheckForAspCoreHosting()
         {
-            try
-            {
-                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\Updates\\.NET\\");
-                if (key != null)
+            
+                if (PrerequisiteChecker.CheckForAspCoreHosting())
                 {
-                    var possibleAspKeys = key.GetSubKeyNames();
-                    if (possibleAspKeys.Length > 0)
-                    {
-                        foreach (var possibleKey in possibleAspKeys)
-                        {
-                            if (possibleKey.Contains("Microsoft .NET 6"))
-                            {
-                                FrameworkInstalled = true;
-                            }
-                        }
-                    }
+                    CurrentDispatcher.Invoke(() => {
+                        frameworkCheckbox.IsChecked = true;
+                    });
                 }
-            }
-            catch { }
-            FrameworkInstalled = false;
-
+                else
+                {
+                    CurrentDispatcher.Invoke(() => {
+                        frameworkCheckbox.IsChecked = false;
+                    });
+                }
+          
         }
 
         IInstallationStep IInstallationStep.NextStep()
         {
             return new ConfigureIIS();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+           
+                Process.Start("https://aka.ms/dotnet-download");
         }
     }
 }

@@ -20,6 +20,7 @@ namespace BlazamSetup.Steps
     /// </summary>
     public partial class InstallationType : UserControl, IInstallationStep
     {
+
         public InstallationType()
         {
             InitializeComponent();
@@ -47,7 +48,7 @@ namespace BlazamSetup.Steps
                 case InstallType.IIS:
                     return new IISPrerequisiteCheck();
                 case InstallType.Service:
-                    return new ConfigureService();
+                    return new ServicePrerequisite();
             }
             return null;
         }

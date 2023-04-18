@@ -16,19 +16,13 @@ using System.Windows.Shapes;
 namespace BlazamSetup.Steps
 {
     /// <summary>
-    /// Interaction logic for ConfigureService.xaml
+    /// Interaction logic for DatabaseConnection.xaml
     /// </summary>
-    public partial class ConfigureService : UserControl, IInstallationStep
+    public partial class DatabaseConnection : UserControl
     {
-        public ConfigureService()
+        public DatabaseConnection()
         {
             InitializeComponent();
-        }
-
-      
-        IInstallationStep IInstallationStep.NextStep()
-        {
-            return new InstallDirectory();
         }
     }
 }

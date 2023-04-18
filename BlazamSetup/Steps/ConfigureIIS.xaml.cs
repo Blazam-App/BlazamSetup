@@ -29,7 +29,7 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            throw new NotImplementedException();
+            return new InstallDirectory();
         }
 
         private void ChooseCertificateButton_Click(object sender, RoutedEventArgs e)
