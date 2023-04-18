@@ -64,7 +64,7 @@ namespace BlazamSetup.Steps
                 case DBType.MySQL:
                     return new ConfigureDatabaseConnection();
                 case DBType.Sqlite:
-                    return null;
+                    return new SqliteDirectory();
             }
             return this;
         }

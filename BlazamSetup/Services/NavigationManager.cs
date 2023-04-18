@@ -29,6 +29,8 @@ namespace BlazamSetup.Services
             try
             {
                 MainWindow.NextStepButton.Content = "Next";
+                MainWindow.EnableNext();
+                MainWindow.NextStepButton.Visibility = System.Windows.Visibility.Visible;
                 MainWindow.InstallerFrame.GoBack();
             }catch(InvalidOperationException ex)
             {

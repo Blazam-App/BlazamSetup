@@ -19,11 +19,23 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for ConfigureIIS.xaml
     /// </summary>
-    public partial class ConfigureIIS : UserControl,IInstallationStep
+    public partial class ConfigureIIS : UserControl, IInstallationStep
     {
         public ConfigureIIS()
         {
             InitializeComponent();
+            if (InstallationConfiguraion.WebHostConfiguration.ListeningAddress.IsNullOrEmpty())
+                FQDNTextBox.Text = "*";
+            else
+                FQDNTextBox.Text = InstallationConfiguraion.WebHostConfiguration.ListeningAddress;
+
+            HTTPPortTextBox.Text = InstallationConfiguraion.WebHostConfiguration.HttpPort.ToString();
+            HTTPSPortTextBox.Text = InstallationConfiguraion.WebHostConfiguration.HttpsPort.ToString();
+            if (InstallationConfiguraion.WebHostConfiguration.SSLCert != null)
+            {
+                sslCertLabel.Content = InstallationConfiguraion.WebHostConfiguration.SSLCert.FriendlyName;
+                HTTPSPortTextBox.IsEnabled = true;
+            }
         }
 
 
@@ -43,16 +55,39 @@ namespace BlazamSetup.Steps
                 if (certs.Count > 0)
                 {
                     InstallationConfiguraion.WebHostConfiguration.SSLCert = certs[0];
-                    HTTPSHelpLabel.Visibility=Visibility.Hidden;
-                    HTTPSPortTextBox.IsEnabled=true;
+                    HTTPSHelpLabel.Visibility = Visibility.Hidden;
+                    HTTPSPortTextBox.IsEnabled = true;
                     sslCertLabel.Content = InstallationConfiguraion.WebHostConfiguration.SSLCert.FriendlyName;
-                    
+
                 }
             }
             catch (Exception ex)
             {
                 sslCertLabel.Content = ex.Message;
             }
+        }
+
+        private void FQDNTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            InstallationConfiguraion.WebHostConfiguration.ListeningAddress = FQDNTextBox.Text;
+        }
+
+        private void HTTPPortTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                InstallationConfiguraion.WebHostConfiguration.HttpPort = int.Parse(HTTPPortTextBox.Text);
+            }
+            catch { }
+        }
+
+        private void HTTPSPortTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                InstallationConfiguraion.WebHostConfiguration.HttpsPort = int.Parse(HTTPSPortTextBox.Text);
+            }
+            catch { }
         }
     }
 }

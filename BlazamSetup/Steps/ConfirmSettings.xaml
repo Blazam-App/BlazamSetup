@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="BlazamSetup.Steps.ConfirmSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BlazamSetup.Steps"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
+    <Grid>
+        <local:StepTitle Title="Confirm"/>
+        <StackPanel Margin="10,40,0,0">
+            <Label Content="Please confirm the settings shown below"/>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="6*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+
+
+
+
+                </Grid.RowDefinitions>
+
+                <Label   Grid.Row="0" Grid.Column="0" Content="Installation Type: "/>
+                <Label   Grid.Row="0" Grid.Column="1" x:Name="InstallationTypeLabel"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Installation Path: "/>
+                <Label Grid.Row="1"  Grid.Column="1" x:Name="InstallationPathLabel"/>
+
+                <Label Grid.Row="2" Grid.Column="0"  Content="Database Type: "/>
+                <Label Grid.Row="2" Grid.Column="1" x:Name="DatabaseTypeLabel"/>
+
+                <Label Grid.Row="3" Grid.Column="0"  Content="Database Server: "/>
+                <Label Grid.Row="3" Grid.Column="1" x:Name="DatabaseServerLabel" />
+
+            </Grid>
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

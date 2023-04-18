@@ -31,10 +31,7 @@ namespace BlazamSetup.Steps
             try
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                var license = BlazamSetup.Properties.Resources.license;
-                //var resource =FindResource("license");
-                //resource = FindResource("license");
-               // var result =  reader.ReadToEnd();
+                var license = Properties.Resources.license;
                MemoryStream ms = new MemoryStream();
                 foreach(var bite in  license)
                 {
