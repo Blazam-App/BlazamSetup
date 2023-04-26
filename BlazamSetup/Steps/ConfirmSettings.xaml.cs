@@ -25,6 +25,10 @@ namespace BlazamSetup.Steps
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
+            InstallationTypeLabel.Content = InstallationConfiguraion.InstallationType.ToString();
+            InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath;
+            DatabaseTypeLabel.Content =  InstallationConfiguraion.DatabaseType.ToString();
+            DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory:InstallationConfiguraion.DatabaseConfiguration.Server;
         }
 
         public Dispatcher CurrentDispatcher { get; }

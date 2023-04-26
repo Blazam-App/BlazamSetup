@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -113,6 +114,8 @@ namespace BlazamSetup.Services
                         {
                             File.Delete(UpdateFile);
                         Directory.Delete(SourceDirectory, true);
+                            retries = 0;
+
                         }
                         catch
                         {
@@ -122,6 +125,36 @@ namespace BlazamSetup.Services
                 });
                
           
+        }
+        public static void CleanSource()
+        {
+
+            cancellationTokenSource.Cancel();
+            Task.Run(() => {
+                int retries = 5;
+                while (retries-- > 0)
+                {
+                    try
+                    {
+                        Directory.Delete(SourceDirectory+"source\\", true);
+                        retries = 0;
+                    }
+                    catch
+                    {
+                        Task.Delay(50).Wait();
+                    }
+                }
+            });
+
+
+        }
+        internal static void UnpackDownload()
+        {
+            CleanSource();
+            ZipArchive download = new ZipArchive(File.OpenRead(UpdateFile));
+            download.ExtractToDirectory(SourceDirectory+"source\\");
+            download.Dispose();
+            File.Delete(UpdateFile);
         }
     }
 }
