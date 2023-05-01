@@ -36,7 +36,7 @@
                 <Label Grid.Row="2" Grid.Column="0"  Content="Database Type: "/>
                 <Label Grid.Row="2" Grid.Column="1" x:Name="DatabaseTypeLabel"/>
 
-                <Label Grid.Row="3" Grid.Column="0"  Content="Database Server: "/>
+                <Label Grid.Row="3" Grid.Column="0" x:Name="DatabasePathLabel"  Content="Database Server: "/>
                 <Label Grid.Row="3" Grid.Column="1" x:Name="DatabaseServerLabel" />
 
             </Grid>

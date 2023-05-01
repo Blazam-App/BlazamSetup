@@ -63,8 +63,14 @@ namespace BlazamSetup.Steps
             await Task.Run(() =>
             {
                 PreInstallation();
-                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "Blazam\\");
-
+                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\");
+                if (!ServiceManager.IsInstalled)
+                {
+                    CurrentStep = "Install Services";
+                    StepProgress = 0;
+                    ServiceManager.Install();
+                    StepProgress = 100;
+                }
             });
         }
         /// <summary>
@@ -74,53 +80,60 @@ namespace BlazamSetup.Steps
         /// <returns></returns>
         public bool CopySourceFiles(string targetDirectory)
         {
-            CurrentStep = "Copy Files";
-            bool copyingDownTree = false;
-            if (targetDirectory.Contains(DownloadService.SourceDirectory))
+            try
             {
-                copyingDownTree = true;
+                CurrentStep = "Copy Files";
+                bool copyingDownTree = false;
+                if (targetDirectory.Contains(DownloadService.SourceDirectory))
+                {
+                    copyingDownTree = true;
+                }
+                var totalFiles = GetFileCount(DownloadService.SourceDirectory);
+                var fileIndex = 0;
+
+                if (Directory.Exists(DownloadService.SetupTempDirectory))
+                {
+                    var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        directories = directories.Where(d => !d.Contains(targetDirectory));
+
+                    //Now Create all of the directories
+                    foreach (string dirPath in directories)
+                    {
+                        Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
+                    }
+                    var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        files = files.Where(f => !f.Contains(targetDirectory));
+                    //Copy all the files & Replaces any files with the same name
+                    foreach (string newPath in files)
+                    {
+                        File.Copy(newPath, newPath.Replace(DownloadService.SourceDirectory, targetDirectory), true);
+                        fileIndex++;
+                        StepProgress = (fileIndex / totalFiles) * 100;
+                    }
+                    return true;
+
+                }
             }
-            var totalFiles = GetFileCount(DownloadService.SourceDirectory);
-            var fileIndex = 0;
-
-            if (Directory.Exists(DownloadService.SourceDirectory))
+            catch (Exception ex)
             {
-                var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
-
-                if (copyingDownTree)
-                    directories = directories.Where(d => !d.Contains(targetDirectory));
-
-                //Now Create all of the directories
-                foreach (string dirPath in directories)
-                {
-                    Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                }
-                var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                if (copyingDownTree)
-                    files = files.Where(f => !f.Contains(targetDirectory));
-                //Copy all the files & Replaces any files with the same name
-                foreach (string newPath in files)
-                {
-                    File.Copy(newPath, newPath.Replace(DownloadService.SourceDirectory, targetDirectory), true);
-                    fileIndex++;
-                   StepProgress= (fileIndex/totalFiles)*100;
-                }
-                return true;
-
+                Console.WriteLine(ex.Message);
             }
             return false;
         }
 
-        private int GetFileCount(string sourceDirectory, int count=0)
+        private int GetFileCount(string sourceDirectory, int count = 0)
         {
             count += Directory.GetFiles(sourceDirectory).Count();
-            foreach(var subDir in Directory.GetDirectories(sourceDirectory))
+            foreach (var subDir in Directory.GetDirectories(sourceDirectory))
             {
                 count = GetFileCount(subDir, count);
             }
             return count;
-            
+
         }
 
         private void PreInstallation()

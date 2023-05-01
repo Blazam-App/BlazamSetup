@@ -27,23 +27,14 @@ namespace BlazamSetup.Steps
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
-            if(InstallationConfiguraion.InstallationType == InstallType.Service)
-            {
-                InstallationConfiguraion.InstallDirPath = "C:\\Program Files\\";
-
-            }
-            else
+            if(InstallationConfiguraion.InstallationType != InstallType.Service)
             {
                 if (Directory.Exists("C:\\inetpub\\"))
                 {
                     InstallationConfiguraion.InstallDirPath = "C:\\inetpub\\";
 
                 }
-                else
-                {
-                    InstallationConfiguraion.InstallDirPath = "C:\\";
-
-                }
+              
             }
             directoryTextBox.Text= InstallationConfiguraion.InstallDirPath;
         }
@@ -66,7 +57,7 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            return new DatabaseType();
+            return new ConfigureIdentity();
         }
     }
 }

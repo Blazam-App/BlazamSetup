@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Tulpep.ActiveDirectoryObjectPicker;
 
 namespace BlazamSetup
 {
@@ -16,8 +17,9 @@ namespace BlazamSetup
 
         public static DBType? DatabaseType { get; set; } = null;
         public static InstallType? InstallationType { get; set; } = null;
-        public static string InstallDirPath { get;  set; }
+        public static string InstallDirPath { get;  set; } = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
         public static DatabaseConfiguration DatabaseConfiguration { get;  set; } = new DatabaseConfiguration();
+        public static DirectoryObject ApplicationIdentity { get; internal set; }
     }
 
     public class WebHostConfiguration
@@ -66,6 +68,6 @@ namespace BlazamSetup
             }
         }
 
-        public string SqliteDirectory { get; internal set; }
+        public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
     }
 }

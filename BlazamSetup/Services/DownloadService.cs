@@ -15,8 +15,9 @@ namespace BlazamSetup.Services
     internal static class DownloadService
     {
 
-        public  static string SourceDirectory = Path.GetTempPath()+"BlazamSetup\\";
-        public static string UpdateFile = SourceDirectory + "blazam.zip";
+        public  static string SetupTempDirectory = Path.GetTempPath()+"BlazamSetup\\";
+        public  static string SourceDirectory = Path.GetTempPath()+"BlazamSetup\\setup\\";
+        public static string UpdateFile = SetupTempDirectory + "blazam.zip";
         private static ReleaseAsset latestRelease;
 
         public static int ExpectedSize { get; private set; }
@@ -61,7 +62,7 @@ namespace BlazamSetup.Services
                         if (File.Exists(UpdateFile))File.Delete(UpdateFile);
                         using (var streamToReadFrom = await response.Content.ReadAsStreamAsync())
                         {
-                            Directory.CreateDirectory(SourceDirectory);
+                            Directory.CreateDirectory(SetupTempDirectory);
                             File.Create(UpdateFile).Close();
                             using (var streamToWriteTo = File.OpenWrite(UpdateFile))
                             {
@@ -113,7 +114,7 @@ namespace BlazamSetup.Services
                         try
                         {
                             File.Delete(UpdateFile);
-                        Directory.Delete(SourceDirectory, true);
+                        Directory.Delete(SetupTempDirectory, true);
                             retries = 0;
 
                         }
@@ -136,7 +137,7 @@ namespace BlazamSetup.Services
                 {
                     try
                     {
-                        Directory.Delete(SourceDirectory+"source\\", true);
+                        Directory.Delete(SourceDirectory, true);
                         retries = 0;
                     }
                     catch
@@ -152,7 +153,7 @@ namespace BlazamSetup.Services
         {
             CleanSource();
             ZipArchive download = new ZipArchive(File.OpenRead(UpdateFile));
-            download.ExtractToDirectory(SourceDirectory+"source\\");
+            download.ExtractToDirectory(SourceDirectory);
             download.Dispose();
             File.Delete(UpdateFile);
         }
