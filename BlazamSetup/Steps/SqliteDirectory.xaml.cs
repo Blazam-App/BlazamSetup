@@ -24,6 +24,7 @@ namespace BlazamSetup.Steps
         public SqliteDirectory()
         {
             InitializeComponent();
+            directoryTextBox.Text = InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory;
             CurrentDispatcher = Dispatcher;
         }
 

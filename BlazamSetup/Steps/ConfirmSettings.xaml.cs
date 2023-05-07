@@ -26,24 +26,34 @@ namespace BlazamSetup.Steps
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
             InstallationTypeLabel.Content = InstallationConfiguraion.InstallationType.ToString();
-            InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath;
+            InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath+ "\\Blazam";
             DatabaseTypeLabel.Content =  InstallationConfiguraion.DatabaseType.ToString();
-            DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory:InstallationConfiguraion.DatabaseConfiguration.Server;
+            DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory + "\\Blazam" : InstallationConfiguraion.DatabaseConfiguration.Server;
+   
         }
 
         public Dispatcher CurrentDispatcher { get; }
 
+        
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);
             if (oldParent == null)
                 CurrentDispatcher.Invoke(() =>
                 {
+                    if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
+                    {
+                        DatabasePathLabel.Content = "Database Path";
+                    }
+                    else
+                    {
+                        DatabasePathLabel.Content = "Database Server";
+
+                    }
                     MainWindow.NextStepButton.Content = "Install";
                 });
 
         }
-
         IInstallationStep IInstallationStep.NextStep()
         {
             return new Install();

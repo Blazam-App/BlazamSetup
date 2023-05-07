@@ -100,5 +100,16 @@ namespace BlazamSetup
         {
             App.Current.MainWindow.DragMove();
         }
+
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key== Key.Enter)
+            {
+                if (NextButton.IsEnabled)
+                {
+                    NextButton_Click(null,null);
+                }
+            }
+        }
     }
 }

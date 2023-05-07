@@ -37,6 +37,6 @@
             }
         }
 
-        public string SqliteDirectory { get; internal set; }
+        public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
     }
 }

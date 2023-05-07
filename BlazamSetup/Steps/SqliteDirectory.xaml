@@ -15,7 +15,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-            <TextBox x:Name="directoryTextBox" TextWrapping="Wrap" Text="C:\ProgramData" Width="315" VerticalAlignment="Center"/>
+            <TextBox x:Name="directoryTextBox" TextWrapping="Wrap"  Width="315" VerticalAlignment="Center"/>
             <Button Content="Browse" Click="BrowseButton_Click"/>
         </StackPanel>
     </Grid>

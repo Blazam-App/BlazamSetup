@@ -9,6 +9,7 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
+    <Border BorderBrush="Black" BorderThickness="1">
     <Grid>
 
         <DockPanel HorizontalAlignment="Stretch"
@@ -54,7 +55,7 @@
                 </StackPanel>
             </Grid>
         </DockPanel>
-        <Grid Margin="0,30,0,0">
+        <Grid Margin="0,30,0,0" KeyUp="Grid_KeyUp">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="125"/>
                 <ColumnDefinition Width="*"/>
@@ -73,5 +74,5 @@
 
         </Grid>
     </Grid>
-
+    </Border>
 </Window>
