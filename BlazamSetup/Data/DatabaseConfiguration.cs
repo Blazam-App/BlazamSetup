@@ -1,34 +1,5 @@
-﻿using BlazamSetup.Steps;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlazamSetup
+﻿namespace BlazamSetup
 {
-    public enum InstallType { IIS, Service }
-    public enum DBType { Sqlite, SQL, MySQL }
-    internal static class InstallationConfiguraion
-    {
-        public static WebHostConfiguration WebHostConfiguration = new WebHostConfiguration();
-
-        public static DBType? DatabaseType { get; set; } = null;
-        public static InstallType? InstallationType { get; set; } = null;
-        public static string InstallDirPath { get;  set; }
-        public static DatabaseConfiguration DatabaseConfiguration { get;  set; } = new DatabaseConfiguration();
-    }
-
-    public class WebHostConfiguration
-    {
-        public string ListeningAddress { get; set; } = "*";
-        public int HttpPort { get; set; } = 80;
-        public int HttpsPort { get; set; } = 443;
-        public X509Certificate2 SSLCert { get; set; }
-
-    }
-
     public class DatabaseConfiguration
     {
         public string Server { get; set; }

@@ -279,13 +279,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\DatabaseConfiguration.cs" />
+    <Compile Include="Data\ProductInformation.cs" />
+    <Compile Include="Data\WebHostConfiguration.cs" />
     <Compile Include="FolderPicker.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="InstallationConfiguraion.cs" />
+    <Compile Include="Data\InstallationConfiguraion.cs" />
     <Compile Include="Services\ApplicationUpdateException.cs" />
     <Compile Include="Services\DownloadService.cs" />
+    <Compile Include="Services\InstallationService.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\PrerequisiteChecker.cs" />
+    <Compile Include="Services\RegistryService.cs" />
     <Compile Include="Steps\ConfigureDatabaseConnection.xaml.cs">
       <DependentUpon>ConfigureDatabaseConnection.xaml</DependentUpon>
     </Compile>

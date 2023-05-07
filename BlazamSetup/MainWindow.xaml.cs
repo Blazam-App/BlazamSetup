@@ -34,12 +34,14 @@ namespace BlazamSetup
             NextStepButton = NextButton;
             MainWindow.InstallerFrame.Navigate(NavigationManager.CurrentPage);
             MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
+            if (RegistryService.InstallationExists)
+                InstallationConfiguraion.ProductInformation = RegistryService.GetProductInformation();
         }
 
         private void InstallerFrame_ContentRendered(object sender, EventArgs e)
         {
             NavigationManager.CurrentPage = InstallerFrame.Content as IInstallationStep;
-           if(NavigationManager.CurrentPage.GetType() == typeof(Welcome))
+            if (NavigationManager.CurrentPage.GetType() == typeof(Welcome))
             {
                 BackButton.IsEnabled = false;
             }
@@ -66,7 +68,8 @@ namespace BlazamSetup
 
         internal static void EnableNext()
         {
-            CurrentDispatcher.Invoke(() => {
+            CurrentDispatcher.Invoke(() =>
+            {
                 NextStepButton.IsEnabled = true;
 
             });
@@ -75,7 +78,8 @@ namespace BlazamSetup
 
         internal static void DisableNext()
         {
-            CurrentDispatcher.Invoke(() => {
+            CurrentDispatcher.Invoke(() =>
+            {
                 NextStepButton.IsEnabled = false;
 
             });

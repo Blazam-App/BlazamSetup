@@ -98,7 +98,6 @@ namespace BlazamSetup.Services
                     }
                 }
 
-                return true;
             }
                 return false;
         }

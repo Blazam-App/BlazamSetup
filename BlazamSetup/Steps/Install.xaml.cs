@@ -31,7 +31,7 @@ namespace BlazamSetup.Steps
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
             MainWindow.NextStepButton.Visibility = Visibility.Collapsed;
-            StartInstallation();
+            RunInstallation();
         }
         public string CurrentStep
         {
@@ -58,13 +58,14 @@ namespace BlazamSetup.Steps
             throw new NotImplementedException();
         }
 
-        private async void StartInstallation()
+        private async void RunInstallation()
         {
             await Task.Run(() =>
             {
                 PreInstallation();
                 CopySourceFiles(InstallationConfiguraion.InstallDirPath + "Blazam\\");
-
+                RegistryService.CreateUninstallKey();
+                RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
             });
         }
         /// <summary>
