@@ -1,6 +1,7 @@
 ﻿using BlazamSetup.Steps;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,13 +27,23 @@ namespace BlazamSetup
 
 
         internal static WebHostConfiguration WebHostConfiguration = new WebHostConfiguration();
+        private static string installDirPath;
 
         internal static DBType? DatabaseType { get; set; } = null;
         internal static InstallType? InstallationType { get; set; } = null;
         /// <summary>
         /// The path to install to, or already installed at.
         /// </summary>
-        internal static string InstallDirPath { get;  set; }
-        internal static DatabaseConfiguration DatabaseConfiguration { get;  set; } = new DatabaseConfiguration();
+        internal static string InstallDirPath
+        {
+            get => installDirPath; set
+            {
+                installDirPath = value;
+                ProductInformation.InstallLocation = Path.GetFullPath(value+"\\Blazam");
+                ProductInformation.UninstallString = '"'+Path.GetFullPath(value+"\\Blazam\\setup.exe")+"\" /u";
+            }
+        }
+        internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();
+        public static object ApplicationIdentity { get; internal set; }
     }
 }

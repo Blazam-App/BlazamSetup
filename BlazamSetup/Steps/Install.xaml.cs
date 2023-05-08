@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,13 +25,12 @@ namespace BlazamSetup.Steps
     public partial class Install : UserControl, IInstallationStep
     {
         private string currentStep;
-        private double stepProgress;
 
         public Install()
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
-            MainWindow.NextStepButton.Visibility = Visibility.Collapsed;
+            MainWindow.DisableNext();
             RunInstallation();
         }
         public string CurrentStep
@@ -41,6 +41,7 @@ namespace BlazamSetup.Steps
                 CurrentDispatcher.Invoke(() => { CurrentStepLabel.Content = value; });
             }
         }
+        private double stepProgress;
 
         public double StepProgress
         {
@@ -55,7 +56,8 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            throw new NotImplementedException();
+            App.Quit();
+            return new Welcome();
         }
 
         private async void RunInstallation()
@@ -64,18 +66,42 @@ namespace BlazamSetup.Steps
             {
                 PreInstallation();
 
-                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "Blazam\\");
-                if (!ServiceManager.IsInstalled)
+                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\");
+                if (InstallationConfiguraion.InstallationType == InstallType.Service && !ServiceManager.IsInstalled)
                 {
                     CurrentStep = "Install Services";
                     StepProgress = 0;
                     ServiceManager.Install();
                     StepProgress = 100;
                 }
+                CurrentStep = "Finishing Installation";
+                StepProgress = 0;
+                //Post install steps
+                CopyExampleAppSettings();
                 RegistryService.CreateUninstallKey();
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
+                StepProgress = 100;
+                CurrentStep = "Installation Finished";
+                MainWindow.DisableBack();
+                MainWindow.EnableNext();
+
             });
         }
+
+        private void CopyExampleAppSettings()
+        {
+            string exampleFilePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.json.example";
+            string filePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.json";
+            if (!File.Exists(filePath))
+            {
+                if (File.Exists(exampleFilePath))
+                    File.Copy(exampleFilePath, filePath);
+                else
+                    MessageBox.Show("Example appsettings.json configuration file was not found in the installed files!");
+            }
+
+        }
+
         /// <summary>
         /// Copies the entire directory tree to another directory
         /// </summary>
@@ -91,7 +117,7 @@ namespace BlazamSetup.Steps
                 {
                     copyingDownTree = true;
                 }
-                var totalFiles = GetFileCount(DownloadService.SourceDirectory);
+                var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
                 var fileIndex = 0;
 
                 if (Directory.Exists(DownloadService.SetupTempDirectory))
@@ -117,6 +143,9 @@ namespace BlazamSetup.Steps
                         fileIndex++;
                         StepProgress = (fileIndex / totalFiles) * 100;
                     }
+                    var setupPath = Assembly.GetExecutingAssembly().Location;
+                    var destPath = targetDirectory + "setup.exe";
+                    File.Copy(setupPath, destPath, true);
                     return true;
 
                 }
@@ -128,16 +157,7 @@ namespace BlazamSetup.Steps
             return false;
         }
 
-        private int GetFileCount(string sourceDirectory, int count = 0)
-        {
-            count += Directory.GetFiles(sourceDirectory).Count();
-            foreach (var subDir in Directory.GetDirectories(sourceDirectory))
-            {
-                count = GetFileCount(subDir, count);
-            }
-            return count;
-
-        }
+      
 
         private void PreInstallation()
         {

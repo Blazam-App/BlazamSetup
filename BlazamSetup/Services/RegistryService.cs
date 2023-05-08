@@ -3,8 +3,10 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BlazamSetup.Services
 {
@@ -23,21 +25,43 @@ namespace BlazamSetup.Services
             {
                 var value = key.GetValue(property.Name);
                 if (value != null)
-                    property.SetValue(productInformation, value);
+                    switch (property.PropertyType.Name)
+                    {
+                        case "Int64":
+                            property.SetValue(productInformation, Convert.ToInt64(value));
+
+                            break;
+
+                        case "Int32":
+                            property.SetValue(productInformation, (int)value);
+
+                            break;
+                        case "String":
+                            property.SetValue(productInformation, value);
+
+                            break;
+                    }
             }
             return productInformation;
         }
 
         internal static bool SetProductInformation(ProductInformation productInformation)
         {
-            var key = OpenKey(true);
-            foreach (var property in typeof(ProductInformation).GetProperties())
+            try
             {
-                var value = property.GetValue(productInformation);
-                if (value != null)
-                    key.SetValue(property.Name, value);
+                var key = OpenKey(true);
+                foreach (var property in typeof(ProductInformation).GetProperties())
+                {
+                    var value = property.GetValue(productInformation);
+                    if (value != null)
+                        key.SetValue(property.Name, value);
+                }
+                return true;
+            }catch(SecurityException ex)
+            {
+                MessageBox.Show("Registry access not authorized");
+                return false;
             }
-            return true;
         }
         public static bool InstallationExists
         {
@@ -48,7 +72,7 @@ namespace BlazamSetup.Services
                     var key = OpenKey();
                     if(key==null) return false;
                     var installDate = key.GetValue("InstallDate");
-                    if(installDate is int && (int)installDate != 0)
+                    if(installDate is string && !((string)installDate).IsNullOrEmpty())
                     {
                         return true;
                     }
@@ -65,6 +89,16 @@ namespace BlazamSetup.Services
             try
             {
                 Hive.CreateSubKey(ProductUninstallKey);
+                return true;
+            }
+            catch (Exception e) { return false; }
+        }
+
+        public static bool DeleteUninstallKey()
+        {
+            try
+            {
+                Hive.DeleteSubKey(ProductUninstallKey);
                 return true;
             }
             catch (Exception e) { return false; }

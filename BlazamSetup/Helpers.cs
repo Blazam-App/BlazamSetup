@@ -30,5 +30,6 @@ namespace BlazamSetup
                 return hash;
             }
         }
+
     }
 }

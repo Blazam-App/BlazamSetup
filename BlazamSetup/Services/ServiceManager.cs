@@ -46,7 +46,11 @@ namespace BlazamSetup.Services
             {
                 var path = InstallationConfiguraion.InstallDirPath + "\\Blazam\\nssm.exe";
                 var arguments = "install " + ServiceName + " \"" + InstallationConfiguraion.InstallDirPath + "\\Blazam\\blazam.exe\"";
-                Process.Start(path,arguments);
+                Process.Start(path, arguments).WaitForExit();
+                arguments = "set " + ServiceName + " ObjectName \"NT AUTHORITY\\Network Service\" \"\"";
+                Process.Start(path, arguments).WaitForExit();
+
+
             }
             return true;
         }
@@ -55,6 +59,7 @@ namespace BlazamSetup.Services
         {
             if (IsInstalled)
             {
+                Stop();
                 Process.Start(
                     InstallationConfiguraion.InstallDirPath + "\\Blazam\nssm.exe",
                     "remove " + ServiceName + " confirm");
@@ -65,14 +70,17 @@ namespace BlazamSetup.Services
         internal static bool Start()
         {
             var service = BlazamServiceController;
-            service.Start();
+            if (service.Status != ServiceControllerStatus.StartPending && service.Status != ServiceControllerStatus.Running)
+
+                service.Start();
 
             return true;
         }
         internal static bool Stop()
         {
             var service = BlazamServiceController;
-            service.Stop();
+            if (service.Status != ServiceControllerStatus.Stopped && service.Status != ServiceControllerStatus.StopPending)
+                service.Stop();
             return true;
         }
     }

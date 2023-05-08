@@ -1,4 +1,6 @@
-﻿namespace BlazamSetup
+﻿using System;
+
+namespace BlazamSetup
 {
     public class DatabaseConfiguration
     {
@@ -35,6 +37,40 @@
                 }
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Returns a full connection string propert for the appsettings.json
+        /// </summary>
+        /// <returns></returns>
+        public string ToAppSettingsString()
+        {
+            string connectionString = "Data Source=";
+            if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
+            {
+                connectionString += SqliteDirectory + ";";
+            }
+            else
+            {
+                connectionString += Server + ',' + Port + ";";
+                connectionString = InsertValue(connectionString, "Database", Database);
+                connectionString = InsertValue(connectionString,
+                    InstallationConfiguraion.DatabaseType==DBType.MySQL?"User": "User Id",
+                    Database);
+                connectionString = InsertValue(connectionString, "Password", Password);
+
+            }
+            return connectionString;
+        }
+
+        private static string InsertValue(string connectionString, string name, string value)
+        {
+            if (!value.IsNullOrEmpty())
+            {
+                connectionString += name + "=" + value + ";";
+            }
+            return connectionString;
         }
 
         public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);

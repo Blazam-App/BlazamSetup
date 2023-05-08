@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,10 +31,11 @@ namespace BlazamSetup.Steps
         {
             DirectoryObjectPickerDialog picker = new DirectoryObjectPickerDialog()
             {
-                AllowedObjectTypes = ObjectTypes.Users|ObjectTypes.ServiceAccounts,
+                AllowedObjectTypes = ObjectTypes.All,
                 DefaultObjectTypes = ObjectTypes.Users|ObjectTypes.ServiceAccounts,
                 AllowedLocations = Locations.All,
-                DefaultLocations = Locations.All,
+                DefaultLocations = Locations.LocalComputer,
+                AttributesToFetch = new Collection<string>() { "distinguishedName"},
                 MultiSelect = false,
                 ShowAdvancedView = true
             };

@@ -11,6 +11,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.Diagnostics;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace BlazamSetup
 {
@@ -31,12 +32,13 @@ namespace BlazamSetup
         public bool DidAppCrash { get; private set; }
         public ErrorReport LastCrashReport { get; private set; }
         public event AppEvent OnLastRunCrashed;
+        public static StartupEventArgs StartupArgs { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-
+            StartupArgs = e;
+           
             if (!Debugger.IsAttached)
             {
                 //Otherwise, make sure we are admin

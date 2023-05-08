@@ -99,15 +99,5 @@ namespace BlazamSetup.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] SQL2019_SSEI_Expr {
-            get {
-                object obj = ResourceManager.GetObject("SQL2019_SSEI_Expr", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
