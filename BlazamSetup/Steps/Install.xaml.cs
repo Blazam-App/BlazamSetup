@@ -74,10 +74,20 @@ namespace BlazamSetup.Steps
                     ServiceManager.Install();
                     StepProgress = 100;
                 }
+                else
+                {
+                    CurrentStep = "Install Services";
+                    StepProgress = 0;
+
+                    IISManager.CreateApplication();
+                    StepProgress = 100;
+
+                }
                 CurrentStep = "Finishing Installation";
                 StepProgress = 0;
                 //Post install steps
-                CopyExampleAppSettings();
+                AppSettingsService.Copy();
+                AppSettingsService.Configure();
                 RegistryService.CreateUninstallKey();
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 StepProgress = 100;
@@ -90,15 +100,7 @@ namespace BlazamSetup.Steps
 
         private void CopyExampleAppSettings()
         {
-            string exampleFilePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.json.example";
-            string filePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.json";
-            if (!File.Exists(filePath))
-            {
-                if (File.Exists(exampleFilePath))
-                    File.Copy(exampleFilePath, filePath);
-                else
-                    MessageBox.Show("Example appsettings.json configuration file was not found in the installed files!");
-            }
+            
 
         }
 

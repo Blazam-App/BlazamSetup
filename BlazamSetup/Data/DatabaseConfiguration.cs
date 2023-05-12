@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace BlazamSetup
 {
@@ -49,7 +50,7 @@ namespace BlazamSetup
             string connectionString = "Data Source=";
             if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
             {
-                connectionString += SqliteDirectory + ";";
+                connectionString += SqliteDirectory + Path.DirectorySeparatorChar+ "database.db;";
             }
             else
             {
@@ -73,6 +74,6 @@ namespace BlazamSetup
             return connectionString;
         }
 
-        public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+        public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)+Path.DirectorySeparatorChar+"Blazam";
     }
 }
