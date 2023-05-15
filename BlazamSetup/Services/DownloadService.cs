@@ -31,11 +31,11 @@ namespace BlazamSetup.Services
 
 
 
-
+            var branch = "stable";
             //Get the releases from the repo
             var releases = await githubclient.Repository.Release.GetAll("Blazam-App", "Blazam");
             //Filter the releases to the selected branch
-            var branchReleases = releases.Where(r => r.TagName.ToLower().Contains("stable"));
+            var branchReleases = releases.Where(r => r.TagName.ToLower().Contains(branch));
             //Get the first release,which should be the most recent
             latestRelease = branchReleases.FirstOrDefault()?.Assets.FirstOrDefault();
             //Get the release filename to prepare a version object
@@ -49,6 +49,8 @@ namespace BlazamSetup.Services
 
             if (latestRelease != null)
             {
+
+
                 using (var client = new HttpClient())
                 {
                     using (var response = await client.GetAsync(latestRelease.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead))
@@ -59,7 +61,19 @@ namespace BlazamSetup.Services
 
                             return false;
                         }
-                        if (File.Exists(UpdateFile))File.Delete(UpdateFile);
+
+                        if (File.Exists(UpdateFile))
+                        {
+                            if (Debugger.IsAttached)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                File.Delete(UpdateFile);
+                            }
+
+                        }
                         using (var streamToReadFrom = await response.Content.ReadAsStreamAsync())
                         {
                             Directory.CreateDirectory(SetupTempDirectory);
@@ -99,7 +113,6 @@ namespace BlazamSetup.Services
                     }
                 }
 
-                return true;
             }
                 return false;
         }
@@ -152,6 +165,7 @@ namespace BlazamSetup.Services
         internal static void UnpackDownload()
         {
             CleanSource();
+            Directory.CreateDirectory(SourceDirectory);
             ZipArchive download = new ZipArchive(File.OpenRead(UpdateFile));
             download.ExtractToDirectory(SourceDirectory);
             download.Dispose();

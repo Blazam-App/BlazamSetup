@@ -1,5 +1,6 @@
 ﻿using BlazamSetup.Services;
 using BlazamSetup.Steps;
+using BlazamSetup.Steps.Uninstall;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +32,29 @@ namespace BlazamSetup
             CurrentDispatcher = Dispatcher;
 
             InstallerFrame = Frame;
+            LastStepButton = BackButton;
             NextStepButton = NextButton;
-            MainWindow.InstallerFrame.Navigate(NavigationManager.CurrentPage);
             MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
+            if (RegistryService.InstallationExists)
+                InstallationConfiguraion.ProductInformation = RegistryService.GetProductInformation();
+
+            if (App.StartupArgs.Args.Any(arg => arg.StartsWith("/u"))){
+                MainWindow.InstallerFrame.Navigate(new WelcomeUninstall());
+
+            }
+            else
+            {
+                MainWindow.InstallerFrame.Navigate(NavigationManager.CurrentPage);
+
+            }
+
+
         }
 
         private void InstallerFrame_ContentRendered(object sender, EventArgs e)
         {
             NavigationManager.CurrentPage = InstallerFrame.Content as IInstallationStep;
-           if(NavigationManager.CurrentPage.GetType() == typeof(Welcome))
+            if (NavigationManager.CurrentPage.GetType() == typeof(Welcome))
             {
                 BackButton.IsEnabled = false;
             }
@@ -51,6 +66,7 @@ namespace BlazamSetup
         }
 
         public static Frame InstallerFrame { get; private set; }
+        public static Button LastStepButton { get; private set; }
         public static Button NextStepButton { get; private set; }
         public static Dispatcher CurrentDispatcher { get; private set; }
 
@@ -64,9 +80,19 @@ namespace BlazamSetup
             NavigationManager.Back();
         }
 
+        internal static void CollapseBack()
+        {
+            CurrentDispatcher.Invoke(() =>
+            {
+                LastStepButton.Visibility = Visibility.Collapsed;
+
+            });
+
+        }
         internal static void EnableNext()
         {
-            CurrentDispatcher.Invoke(() => {
+            CurrentDispatcher.Invoke(() =>
+            {
                 NextStepButton.IsEnabled = true;
 
             });
@@ -75,7 +101,8 @@ namespace BlazamSetup
 
         internal static void DisableNext()
         {
-            CurrentDispatcher.Invoke(() => {
+            CurrentDispatcher.Invoke(() =>
+            {
                 NextStepButton.IsEnabled = false;
 
             });
@@ -106,6 +133,15 @@ namespace BlazamSetup
                     NextButton_Click(null,null);
                 }
             }
+        }
+
+        internal static void DisableBack()
+        {
+            CurrentDispatcher.Invoke(() =>
+            {
+                LastStepButton.IsEnabled = false;
+
+            });
         }
     }
 }

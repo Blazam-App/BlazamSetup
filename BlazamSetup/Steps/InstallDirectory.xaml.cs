@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace BlazamSetup.Steps
@@ -21,43 +20,52 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for InstallDirectory.xaml
     /// </summary>
-    public partial class InstallDirectory : System.Windows.Controls.UserControl,IInstallationStep
+    public partial class InstallDirectory : System.Windows.Controls.UserControl, IInstallationStep
     {
         public InstallDirectory()
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
-            if(InstallationConfiguraion.InstallationType != InstallType.Service)
+            if (InstallationConfiguraion.InstallDirPath.IsNullOrEmpty())
             {
-                if (Directory.Exists("C:\\inetpub\\"))
+                if (InstallationConfiguraion.InstallationType != InstallType.Service)
                 {
-                    InstallationConfiguraion.InstallDirPath = "C:\\inetpub\\";
+                    if (Directory.Exists("C:\\inetpub\\"))
+                        InstallationConfiguraion.InstallDirPath = "C:\\inetpub\\";
+
+
 
                 }
-              
+                else
+                {
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)))
+                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+                }
+
             }
-            directoryTextBox.Text= InstallationConfiguraion.InstallDirPath;
+            directoryTextBox.Text = InstallationConfiguraion.InstallDirPath;
         }
 
         public Dispatcher CurrentDispatcher { get; }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new FolderPicker() { InputPath = InstallationConfiguraion.InstallDirPath } ;
+            var dialog = new FolderPicker() { InputPath = InstallationConfiguraion.InstallDirPath };
 
             if (dialog.ShowDialog() == true)
             {
                 InstallationConfiguraion.InstallDirPath = dialog.ResultPath;
-                CurrentDispatcher.Invoke(() => {
+                CurrentDispatcher.Invoke(() =>
+                {
                     directoryTextBox.Text = InstallationConfiguraion.InstallDirPath;
                 });
             }
-            
+
         }
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            return new ConfigureIdentity();
+            return new DatabaseType();
         }
     }
 }

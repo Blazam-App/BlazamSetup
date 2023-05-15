@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,14 +25,16 @@ namespace BlazamSetup.Steps
     public partial class Install : UserControl, IInstallationStep
     {
         private string currentStep;
-        private double stepProgress;
 
         public Install()
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
-            MainWindow.NextStepButton.Visibility = Visibility.Collapsed;
-            StartInstallation();
+            MainWindow.DisableNext();
+            InstallationService.OnProgress += (value) => StepProgress = value;
+            InstallationService.OnStepTitleChanged += (value) => CurrentStep = value;
+            InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
+            RunInstallation();
         }
         public string CurrentStep
         {
@@ -41,6 +44,7 @@ namespace BlazamSetup.Steps
                 CurrentDispatcher.Invoke(() => { CurrentStepLabel.Content = value; });
             }
         }
+        private double stepProgress;
 
         public double StepProgress
         {
@@ -55,93 +59,15 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            throw new NotImplementedException();
+            App.Quit();
+            return new Welcome();
         }
 
-        private async void StartInstallation()
+        private async void RunInstallation()
         {
-            await Task.Run(() =>
-            {
-                PreInstallation();
-                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\");
-                if (!ServiceManager.IsInstalled)
-                {
-                    CurrentStep = "Install Services";
-                    StepProgress = 0;
-                    ServiceManager.Install();
-                    StepProgress = 100;
-                }
-            });
-        }
-        /// <summary>
-        /// Copies the entire directory tree to another directory
-        /// </summary>
-        /// <param name="targetDirectory"></param>
-        /// <returns></returns>
-        public bool CopySourceFiles(string targetDirectory)
-        {
-            try
-            {
-                CurrentStep = "Copy Files";
-                bool copyingDownTree = false;
-                if (targetDirectory.Contains(DownloadService.SourceDirectory))
-                {
-                    copyingDownTree = true;
-                }
-                var totalFiles = GetFileCount(DownloadService.SourceDirectory);
-                var fileIndex = 0;
-
-                if (Directory.Exists(DownloadService.SetupTempDirectory))
-                {
-                    var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
-
-                    if (copyingDownTree)
-                        directories = directories.Where(d => !d.Contains(targetDirectory));
-
-                    //Now Create all of the directories
-                    foreach (string dirPath in directories)
-                    {
-                        Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                    }
-                    var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                    if (copyingDownTree)
-                        files = files.Where(f => !f.Contains(targetDirectory));
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in files)
-                    {
-                        File.Copy(newPath, newPath.Replace(DownloadService.SourceDirectory, targetDirectory), true);
-                        fileIndex++;
-                        StepProgress = (fileIndex / totalFiles) * 100;
-                    }
-                    return true;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return false;
+            await InstallationService.StartInstallationAsync();
         }
 
-        private int GetFileCount(string sourceDirectory, int count = 0)
-        {
-            count += Directory.GetFiles(sourceDirectory).Count();
-            foreach (var subDir in Directory.GetDirectories(sourceDirectory))
-            {
-                count = GetFileCount(subDir, count);
-            }
-            return count;
-
-        }
-
-        private void PreInstallation()
-        {
-            CurrentStep = "Extract Files";
-
-            DownloadService.UnpackDownload();
-            return;
-        }
+      
     }
 }
