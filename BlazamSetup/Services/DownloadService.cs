@@ -15,8 +15,8 @@ namespace BlazamSetup.Services
     internal static class DownloadService
     {
 
-        public  static string SetupTempDirectory = Path.GetTempPath()+"BlazamSetup\\";
-        public  static string SourceDirectory = Path.GetTempPath()+"BlazamSetup\\setup\\";
+        public  static string SetupTempDirectory = InstallationConfiguraion.SetupTempDirectory;
+        public  static string SourceDirectory = InstallationConfiguraion.SetupTempDirectory+"setup\\";
         public static string UpdateFile = SetupTempDirectory + "blazam.zip";
         private static ReleaseAsset latestRelease;
 

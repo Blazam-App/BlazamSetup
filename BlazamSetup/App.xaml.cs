@@ -12,6 +12,8 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.Diagnostics;
 using Org.BouncyCastle.Bcpg.OpenPgp;
+using Serilog;
+using Serilog.Events;
 
 namespace BlazamSetup
 {
@@ -34,10 +36,28 @@ namespace BlazamSetup
         public event AppEvent OnLastRunCrashed;
         public static StartupEventArgs StartupArgs { get; private set; }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs args)
         {
-            base.OnStartup(e);
-            StartupArgs = e;
+            base.OnStartup(args);
+            Log.Logger = new LoggerConfiguration()
+                  .Enrich.FromLogContext()
+                 .Enrich.WithMachineName()
+                 .Enrich.WithEnvironmentName()
+                 .Enrich.WithEnvironmentUserName()
+                 
+
+                  .WriteTo.File(InstallationConfiguraion.SetupTempDirectory + @"setuplog.txt",
+                  rollingInterval: RollingInterval.Infinite,
+                  outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+                  retainedFileTimeLimit: TimeSpan.FromDays(30))
+                  .WriteTo.Logger(lc =>
+                  {
+                      //lc.WriteTo.Console();
+                      lc.Filter.ByExcluding(e => e.Level == LogEventLevel.Information).WriteTo.Console();
+                  })
+                  .WriteTo.Seq("http://logs.blazam.org:5341", apiKey: "S3JdoIIfIKcX4L3howh1", restrictedToMinimumLevel: LogEventLevel.Warning)
+                  .CreateLogger();
+            StartupArgs = args;
            
             if (!Debugger.IsAttached)
             {
