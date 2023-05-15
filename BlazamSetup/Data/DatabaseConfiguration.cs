@@ -74,6 +74,6 @@ namespace BlazamSetup
             return connectionString;
         }
 
-        public string SqliteDirectory { get; internal set; } = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)+Path.DirectorySeparatorChar+"Blazam";
+        public string SqliteDirectory { get; internal set; } = InstallationConfiguraion.ProgramDataDir;
     }
 }

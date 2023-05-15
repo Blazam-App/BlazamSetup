@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.Administration;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,19 +24,15 @@ namespace BlazamSetup.Services
                         InstallationConfiguraion.InstallDirPath + @"Blazam\\");
                     serverManager.CommitChanges();
                 }
-                SetFolderPermissions();
+                FileSystemService.AddPermission(
+                    InstallationConfiguraion.InstallDirPath + @"Blazam\\",
+                    "IIS_IUSRS",
+                    FileSystemRights.ReadAndExecute
+                    );
                 return true;
             }
             return false;
         }
-        public static bool SetFolderPermissions()
-        {
-            var path = InstallationConfiguraion.InstallDirPath + @"Blazam\\";
-            DirectoryInfo dInfo = new DirectoryInfo(path);
-            DirectorySecurity dSecurity = dInfo.GetAccessControl();
-            dSecurity.AddAccessRule(new FileSystemAccessRule("IIS_IUSRS", FileSystemRights.ReadAndExecute, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
-            dInfo.SetAccessControl(dSecurity);
-            return true;
-        }
+       
     }
 }

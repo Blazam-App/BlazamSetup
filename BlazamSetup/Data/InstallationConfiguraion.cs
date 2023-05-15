@@ -44,6 +44,8 @@ namespace BlazamSetup
             }
         }
         internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();
+        [Obsolete("Not used because I decided to just force a default identity.")]
         public static object ApplicationIdentity { get; internal set; }
+        public static string ProgramDataDir => Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + Path.DirectorySeparatorChar + "Blazam";
     }
 }

@@ -51,7 +51,7 @@ namespace BlazamSetup
                 SetupAppCenter();
             }
 
-
+            
 
         }
 

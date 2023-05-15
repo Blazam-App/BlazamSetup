@@ -31,6 +31,9 @@ namespace BlazamSetup.Steps
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
             MainWindow.DisableNext();
+            InstallationService.OnProgress += (value) => StepProgress = value;
+            InstallationService.OnStepTitleChanged += (value) => CurrentStep = value;
+            InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
             RunInstallation();
         }
         public string CurrentStep
@@ -62,111 +65,9 @@ namespace BlazamSetup.Steps
 
         private async void RunInstallation()
         {
-            await Task.Run(() =>
-            {
-                PreInstallation();
-
-                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\");
-                if (InstallationConfiguraion.InstallationType == InstallType.Service && !ServiceManager.IsInstalled)
-                {
-                    CurrentStep = "Install Services";
-                    StepProgress = 0;
-                    ServiceManager.Install();
-                    StepProgress = 100;
-                }
-                else
-                {
-                    CurrentStep = "Install Services";
-                    StepProgress = 0;
-
-                    IISManager.CreateApplication();
-                    StepProgress = 100;
-
-                }
-                CurrentStep = "Finishing Installation";
-                StepProgress = 0;
-                //Post install steps
-                AppSettingsService.Copy();
-                AppSettingsService.Configure();
-                RegistryService.CreateUninstallKey();
-                RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
-                StepProgress = 100;
-                CurrentStep = "Installation Finished";
-                MainWindow.DisableBack();
-                MainWindow.EnableNext();
-
-            });
-        }
-
-        private void CopyExampleAppSettings()
-        {
-            
-
-        }
-
-        /// <summary>
-        /// Copies the entire directory tree to another directory
-        /// </summary>
-        /// <param name="targetDirectory"></param>
-        /// <returns></returns>
-        public bool CopySourceFiles(string targetDirectory)
-        {
-            try
-            {
-                CurrentStep = "Copy Files";
-                bool copyingDownTree = false;
-                if (targetDirectory.Contains(DownloadService.SourceDirectory))
-                {
-                    copyingDownTree = true;
-                }
-                var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
-                var fileIndex = 0;
-
-                if (Directory.Exists(DownloadService.SetupTempDirectory))
-                {
-                    var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
-
-                    if (copyingDownTree)
-                        directories = directories.Where(d => !d.Contains(targetDirectory));
-
-                    //Now Create all of the directories
-                    foreach (string dirPath in directories)
-                    {
-                        Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                    }
-                    var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                    if (copyingDownTree)
-                        files = files.Where(f => !f.Contains(targetDirectory));
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in files)
-                    {
-                        File.Copy(newPath, newPath.Replace(DownloadService.SourceDirectory, targetDirectory), true);
-                        fileIndex++;
-                        StepProgress = (fileIndex / totalFiles) * 100;
-                    }
-                    var setupPath = Assembly.GetExecutingAssembly().Location;
-                    var destPath = targetDirectory + "setup.exe";
-                    File.Copy(setupPath, destPath, true);
-                    return true;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return false;
+            await InstallationService.StartInstallationAsync();
         }
 
       
-
-        private void PreInstallation()
-        {
-            CurrentStep = "Extract Files";
-
-            DownloadService.UnpackDownload();
-            return;
-        }
     }
 }

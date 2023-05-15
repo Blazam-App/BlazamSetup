@@ -32,8 +32,6 @@ namespace BlazamSetup.Services
 
 
             var branch = "stable";
-            if (Debugger.IsAttached)
-                branch = "dev";
             //Get the releases from the repo
             var releases = await githubclient.Repository.Release.GetAll("Blazam-App", "Blazam");
             //Filter the releases to the selected branch
