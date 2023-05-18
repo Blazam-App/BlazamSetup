@@ -1,6 +1,8 @@
 ﻿using BlazamSetup.Services;
 using BlazamSetup.Steps;
 using BlazamSetup.Steps.Uninstall;
+using Microsoft.AppCenter.Ingestion.Models.Serialization;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,26 +30,44 @@ namespace BlazamSetup
     {
         public MainWindow()
         {
-            InitializeComponent();
-            CurrentDispatcher = Dispatcher;
-
-            InstallerFrame = Frame;
-            LastStepButton = BackButton;
-            NextStepButton = NextButton;
-            MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
-            if (RegistryService.InstallationExists)
-                InstallationConfiguraion.ProductInformation = RegistryService.GetProductInformation();
-
-            if (App.StartupArgs.Args.Any(arg => arg.StartsWith("/u"))){
-                MainWindow.InstallerFrame.Navigate(new WelcomeUninstall());
-
-            }
-            else
+            try
             {
-                MainWindow.InstallerFrame.Navigate(NavigationManager.CurrentPage);
+                InitializeComponent();
+                CurrentDispatcher = Dispatcher;
 
+                InstallerFrame = Frame;
+                LastStepButton = BackButton;
+                NextStepButton = NextButton;
+                MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
+                if (RegistryService.InstallationExists)
+                    InstallationConfiguraion.ProductInformation = RegistryService.GetProductInformation();
+
+                if (App.StartupArgs.Args.Any(arg => arg.StartsWith("/u")))
+                {
+                    Log.Information("Uninstaller Started");
+                    MainWindow.InstallerFrame.Navigate(new WelcomeUninstall());
+
+                }
+                else
+                {
+                 
+                    Log.Information("Installer Started");
+                    if (RegistryService.InstallationExists)
+                    {
+                        MainWindow.InstallerFrame.Navigate(new InstalledActionDialog());
+
+                    }
+                    else
+                    {
+                        MainWindow.InstallerFrame.Navigate(NavigationManager.CurrentPage);
+
+                    }
+
+                }
+            }catch (Exception ex)
+            {
+                Log.Error("Uncaught Exception: {@Error}", ex);
             }
-
 
         }
 

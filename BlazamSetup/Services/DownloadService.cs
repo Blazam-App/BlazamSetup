@@ -1,4 +1,5 @@
 ﻿using Octokit;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,8 +16,8 @@ namespace BlazamSetup.Services
     internal static class DownloadService
     {
 
-        public  static string SetupTempDirectory = InstallationConfiguraion.SetupTempDirectory;
-        public  static string SourceDirectory = InstallationConfiguraion.SetupTempDirectory+"setup\\";
+        public static string SetupTempDirectory = Path.GetTempPath() + "BlazamSetup\\";
+        public static string SourceDirectory = Path.GetTempPath() + "BlazamSetup\\setup\\";
         public static string UpdateFile = SetupTempDirectory + "blazam.zip";
         private static ReleaseAsset latestRelease;
 
@@ -27,6 +28,8 @@ namespace BlazamSetup.Services
 
         public static async Task<bool> Download()
         {
+            Log.Information("Download started");
+
             var githubclient = new GitHubClient(new ProductHeaderValue("BLAZAM-APP"));
 
 
@@ -114,44 +117,23 @@ namespace BlazamSetup.Services
                 }
 
             }
-                return false;
+            return false;
         }
-        public  static void CleanDownload()
-        {
-            
-                cancellationTokenSource.Cancel();
-                Task.Run(() => {
-                    int retries =5 ;
-                    while (retries-->0)
-                    {
-                        try
-                        {
-                            File.Delete(UpdateFile);
-                        Directory.Delete(SetupTempDirectory, true);
-                            retries = 0;
-
-                        }
-                        catch
-                        {
-                            Task.Delay(50).Wait();
-                        }
-                    }
-                });
-               
-          
-        }
-        public static void CleanSource()
+        public static void CleanDownload()
         {
 
             cancellationTokenSource.Cancel();
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 int retries = 5;
                 while (retries-- > 0)
                 {
                     try
                     {
-                        Directory.Delete(SourceDirectory, true);
+                        File.Delete(UpdateFile);
+                        Directory.Delete(SetupTempDirectory, true);
                         retries = 0;
+
                     }
                     catch
                     {
@@ -162,14 +144,57 @@ namespace BlazamSetup.Services
 
 
         }
-        internal static void UnpackDownload()
+        public static void CleanSource()
         {
-            CleanSource();
-            Directory.CreateDirectory(SourceDirectory);
-            ZipArchive download = new ZipArchive(File.OpenRead(UpdateFile));
-            download.ExtractToDirectory(SourceDirectory);
-            download.Dispose();
-            File.Delete(UpdateFile);
+
+            cancellationTokenSource.Cancel();
+            Task.Run(() =>
+            {
+                int retries = 5;
+                while (retries-- > 0)
+                {
+                    try
+                    {
+                        Log.Information("Cleaning old extracted files: " + SourceDirectory);
+
+                        Directory.Delete(SourceDirectory, true);
+                        retries = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error cleaning old installation files: {@Error}", ex);
+
+                        Task.Delay(50).Wait();
+                    }
+                }
+            });
+
+
+        }
+        internal static async Task<bool> UnpackDownload()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    Log.Information("Extracting files: " + SourceDirectory);
+
+                    CleanSource();
+                    Directory.CreateDirectory(SourceDirectory);
+                    ZipArchive download = new ZipArchive(File.OpenRead(UpdateFile));
+                    download.ExtractToDirectory(SourceDirectory);
+                    download.Dispose();
+                    File.Delete(UpdateFile);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error unpacking download: {@Error}", ex);
+
+                }
+                return false;
+            });
+
         }
     }
 }

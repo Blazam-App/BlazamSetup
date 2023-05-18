@@ -423,6 +423,9 @@
     <Compile Include="Steps\InstallDirectory.xaml.cs">
       <DependentUpon>InstallDirectory.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Steps\InstalledActionDialog.xaml.cs">
+      <DependentUpon>InstalledActionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Steps\LicenseAgreement.xaml.cs">
       <DependentUpon>LicenseAgreement.xaml</DependentUpon>
     </Compile>
@@ -497,6 +500,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Steps\InstallDirectory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\InstalledActionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

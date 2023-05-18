@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Serilog;
+using SQLitePCL;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,21 +16,34 @@ namespace BlazamSetup.Services
         internal static AppEvent<int> OnProgress { get; set; }
         internal static AppEvent<string> OnStepTitleChanged { get; set; }
         internal static AppEvent OnInstallationFinished { get; set; }
-        internal static CancellationTokenSource CancellationTokenSource { get; set; }= new CancellationTokenSource();
+        internal static CancellationTokenSource CancellationTokenSource { get; set; } = new CancellationTokenSource();
 
-        internal static async Task StartInstallationAsync() {
+        internal static async Task StartInstallationAsync()
+        {
+            Log.Information("Installattion Started {@InstallationType} {@InstallDirPath} {@DatabaseConfiguration}", InstallationConfiguraion.InstallationType, InstallationConfiguraion.InstallDirPath, InstallationConfiguraion.DatabaseConfiguration);
+
+            if (!await PreInstallation()) Rollback();
+            if (CancellationTokenSource.IsCancellationRequested) return;
+            if (!await CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\")) Rollback();
+            if (CancellationTokenSource.IsCancellationRequested) return;
 
             await Task.Run(() =>
             {
-                PreInstallation();
 
-                CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\");
-                CreateProgramDataDirectory();
+                if (CancellationTokenSource.IsCancellationRequested) return;
+
+                if (!CreateProgramDataDirectory()) Rollback();
+                if (CancellationTokenSource.IsCancellationRequested) return;
+
+                
                 if (InstallationConfiguraion.InstallationType == InstallType.Service && !ServiceManager.IsInstalled)
                 {
                     OnStepTitleChanged?.Invoke("Install Services");
                     OnProgress?.Invoke(0);
-                    ServiceManager.Install();
+                    if (!ServiceManager.Install()) Rollback();
+                    if (CancellationTokenSource.IsCancellationRequested) return;
+
+
                     OnProgress?.Invoke(100);
                 }
                 else
@@ -36,37 +51,56 @@ namespace BlazamSetup.Services
                     OnStepTitleChanged?.Invoke("Configuring IIS");
                     OnProgress?.Invoke(0);
 
-                    IISManager.CreateApplication();
+                    if (!IISManager.CreateApplication()) Rollback();
+                    if (CancellationTokenSource.IsCancellationRequested) return;
+
                     OnProgress?.Invoke(100);
 
                 }
                 OnStepTitleChanged?.Invoke("Finishing Installation");
                 OnProgress?.Invoke(0);
+                if (CancellationTokenSource.IsCancellationRequested) return;
+
                 //Post install steps
                 AppSettingsService.Copy();
                 AppSettingsService.Configure();
-                RegistryService.CreateUninstallKey();
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");
+                Log.Information("Installation Finished Succeessfully");
+
                 MainWindow.DisableBack();
                 MainWindow.EnableNext();
 
             });
         }
 
-        private static void CreateProgramDataDirectory()
+        private static void Rollback()
         {
-            string identity = "IIS_IUSRS";
-            if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                identity = "NT Authority/NetworkService";
+            Cancel();
+        }
 
-            Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
-            FileSystemService.AddPermission(
-                InstallationConfiguraion.ProgramDataDir,
-                identity,
-                System.Security.AccessControl.FileSystemRights.Write | System.Security.AccessControl.FileSystemRights.Modify | System.Security.AccessControl.FileSystemRights.ReadAndExecute
-                );
+        private static bool CreateProgramDataDirectory()
+        {
+            try
+            {
+                string identity = "IIS_IUSRS";
+                if (InstallationConfiguraion.InstallationType == InstallType.Service)
+                    identity = "NT Authority/NetworkService";
+
+                Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
+                FileSystemService.AddPermission(
+                    InstallationConfiguraion.ProgramDataDir,
+                    identity,
+                    System.Security.AccessControl.FileSystemRights.Write | System.Security.AccessControl.FileSystemRights.Modify | System.Security.AccessControl.FileSystemRights.ReadAndExecute
+                    );
+                return true;
+            }catch (Exception ex)
+            {
+                Log.Error("Error creating program data directory: {@Error}", ex);
+
+            }
+            return false;
         }
 
 
@@ -75,68 +109,83 @@ namespace BlazamSetup.Services
         /// </summary>
         /// <param name="targetDirectory"></param>
         /// <returns></returns>
-        public static bool CopySourceFiles(string targetDirectory)
+        public static async Task<bool> CopySourceFiles(string targetDirectory)
         {
-            try
+            return await Task.Run(() =>
             {
-                OnStepTitleChanged?.Invoke("Copy Files");
-                bool copyingDownTree = false;
-                if (targetDirectory.Contains(DownloadService.SourceDirectory))
+                try
                 {
-                    copyingDownTree = true;
-                }
-                var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
-                var fileIndex = 0;
+                    OnStepTitleChanged?.Invoke("Copy Files");
+                    Log.Information("File copy started");
 
-                if (Directory.Exists(DownloadService.SetupTempDirectory))
+                    bool copyingDownTree = false;
+                    if (targetDirectory.Contains(DownloadService.SourceDirectory))
+                    {
+                        copyingDownTree = true;
+                    }
+                    var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
+                    var fileIndex = 0;
+
+                    if (Directory.Exists(DownloadService.SetupTempDirectory))
+                    {
+                        var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
+
+                        if (copyingDownTree)
+                            directories = directories.Where(d => !d.Contains(targetDirectory));
+
+                        //Now Create all of the directories
+                        foreach (string dirPath in directories)
+                        {
+                            Log.Information("Creating directory: "+dirPath);
+
+                            Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
+                        }
+                        var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
+
+                        if (copyingDownTree)
+                            files = files.Where(f => !f.Contains(targetDirectory));
+                        //Copy all the files & Replaces any files with the same name
+                        foreach (string path in files)
+                        {
+                            var newPath = path.Replace(DownloadService.SourceDirectory, targetDirectory);
+                            Log.Information("Copying file: " + newPath);
+
+                            File.Copy(path, newPath, true);
+                            fileIndex++;
+                            OnProgress?.Invoke((fileIndex / totalFiles) * 100);
+                        }
+                        CopySetup(targetDirectory);
+                        return true;
+
+                    }
+                }
+                catch (Exception ex)
                 {
-                    var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
+                    Log.Error("Error Copying files {@Error}",ex);
 
-                    if (copyingDownTree)
-                        directories = directories.Where(d => !d.Contains(targetDirectory));
-
-                    //Now Create all of the directories
-                    foreach (string dirPath in directories)
-                    {
-                        Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                    }
-                    var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                    if (copyingDownTree)
-                        files = files.Where(f => !f.Contains(targetDirectory));
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in files)
-                    {
-                        File.Copy(newPath, newPath.Replace(DownloadService.SourceDirectory, targetDirectory), true);
-                        fileIndex++;
-                        OnProgress?.Invoke((fileIndex / totalFiles) * 100);
-                    }
-                    CopySetup(targetDirectory);
-                    return true;
-
+                    Console.WriteLine(ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return false;
+                return false;
+            });
+
         }
 
         private static void CopySetup(string targetDirectory)
         {
             var setupPath = Assembly.GetExecutingAssembly().Location;
             var destPath = targetDirectory + "setup.exe";
+            Log.Information("Copying file: " + destPath);
+
             File.Copy(setupPath, destPath, true);
         }
 
 
-        private static void PreInstallation()
+        private static async Task<bool> PreInstallation()
         {
             OnStepTitleChanged?.Invoke("Extract Files");
 
-            DownloadService.UnpackDownload();
-            return;
+            return await DownloadService.UnpackDownload();
+
         }
 
 
@@ -144,6 +193,8 @@ namespace BlazamSetup.Services
         {
             if (!CancellationTokenSource.IsCancellationRequested)
             {
+                Log.Information("Cancelling");
+
                 CancellationTokenSource.Cancel();
             }
         }

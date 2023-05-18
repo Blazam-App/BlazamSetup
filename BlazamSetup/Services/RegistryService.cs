@@ -49,6 +49,8 @@ namespace BlazamSetup.Services
         {
             try
             {
+                RegistryService.CreateUninstallKey();
+
                 var key = OpenKey(true);
                 foreach (var property in typeof(ProductInformation).GetProperties())
                 {

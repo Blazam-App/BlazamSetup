@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace BlazamSetup
 {
     public enum InstallType { IIS, Service }
+    public enum InstalledAction { Update, Repair,Remove}
     public enum DBType { Sqlite, SQL, MySQL }
     internal static class InstallationConfiguraion
     {
@@ -49,5 +50,7 @@ namespace BlazamSetup
         public static string ProgramDataDir => Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + Path.DirectorySeparatorChar + "Blazam";
 
         public static string SetupTempDirectory => Path.GetTempPath() + "BlazamSetup\\";
+
+        public static InstalledAction InstalledAction { get; internal set; }
     }
 }

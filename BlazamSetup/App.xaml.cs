@@ -14,6 +14,7 @@ using System.Diagnostics;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Serilog;
 using Serilog.Events;
+using System.Windows.Threading;
 
 namespace BlazamSetup
 {
@@ -44,7 +45,7 @@ namespace BlazamSetup
                  .Enrich.WithMachineName()
                  .Enrich.WithEnvironmentName()
                  .Enrich.WithEnvironmentUserName()
-                 
+                 .Enrich.WithProperty("Application Name","Blazam Setup")
 
                   .WriteTo.File(InstallationConfiguraion.SetupTempDirectory + @"setuplog.txt",
                   rollingInterval: RollingInterval.Infinite,
@@ -55,8 +56,9 @@ namespace BlazamSetup
                       //lc.WriteTo.Console();
                       lc.Filter.ByExcluding(e => e.Level == LogEventLevel.Information).WriteTo.Console();
                   })
-                  .WriteTo.Seq("http://logs.blazam.org:5341", apiKey: "S3JdoIIfIKcX4L3howh1", restrictedToMinimumLevel: LogEventLevel.Warning)
+                  .WriteTo.Seq("http://logs.blazam.org:5341", apiKey: "S3JdoIIfIKcX4L3howh1", restrictedToMinimumLevel: LogEventLevel.Information)
                   .CreateLogger();
+            SetupUnhandledExceptionHandling();
             StartupArgs = args;
            
             if (!Debugger.IsAttached)
@@ -74,7 +76,7 @@ namespace BlazamSetup
             
 
         }
-
+      
         private void SetupAppCenter()
         {
             try
@@ -149,6 +151,62 @@ namespace BlazamSetup
 
             // Return TRUE if user is in role "Administrator"
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void SetupUnhandledExceptionHandling()
+        {
+            // Catch exceptions from all threads in the AppDomain.
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                ShowUnhandledException(args.ExceptionObject as Exception, "AppDomain.CurrentDomain.UnhandledException", false);
+
+            // Catch exceptions from each AppDomain that uses a task scheduler for async operations.
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+                ShowUnhandledException(args.Exception, "TaskScheduler.UnobservedTaskException", false);
+
+            // Catch exceptions from a single specific UI dispatcher thread.
+            Dispatcher.UnhandledException += (sender, args) =>
+            {
+                // If we are debugging, let Visual Studio handle the exception and take us to the code that threw it.
+                if (!Debugger.IsAttached)
+                {
+                    args.Handled = true;
+                    ShowUnhandledException(args.Exception, "Dispatcher.UnhandledException", true);
+                }
+            };
+
+            // Catch exceptions from the main UI dispatcher thread.
+            // Typically we only need to catch this OR the Dispatcher.UnhandledException.
+            // Handling both can result in the exception getting handled twice.
+            //Application.Current.DispatcherUnhandledException += (sender, args) =>
+            //{
+            //	// If we are debugging, let Visual Studio handle the exception and take us to the code that threw it.
+            //	if (!Debugger.IsAttached)
+            //	{
+            //		args.Handled = true;
+            //		ShowUnhandledException(args.Exception, "Application.Current.DispatcherUnhandledException", true);
+            //	}
+            //};
+        }
+
+        void ShowUnhandledException(Exception e, string unhandledExceptionType, bool promptUserForShutdown)
+        {
+            Log.Error("Uncaught Exception: {@Error}", e);
+
+            var messageBoxTitle = $"Fatal Error!";
+            var messageBoxMessage = $"We apologize for the error. A report has been sent to the developers.";
+            var messageBoxButtons = MessageBoxButton.OK;
+
+            if (promptUserForShutdown)
+            {
+                messageBoxMessage += "\n\nNormally the installer would close now. Should we close it?";
+                messageBoxButtons = MessageBoxButton.YesNo;
+            }
+
+            // Let the user decide if the app should die or not (if applicable).
+            if (MessageBox.Show(messageBoxMessage, messageBoxTitle, messageBoxButtons) == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }
