@@ -13,7 +13,7 @@ namespace BlazamSetup.Services
 {
     internal static class InstallationService
     {
-        internal static AppEvent<int> OnProgress { get; set; }
+        internal static AppEvent<double> OnProgress { get; set; }
         internal static AppEvent<string> OnStepTitleChanged { get; set; }
         internal static AppEvent OnInstallationFinished { get; set; }
         internal static CancellationTokenSource CancellationTokenSource { get; set; } = new CancellationTokenSource();
@@ -24,7 +24,7 @@ namespace BlazamSetup.Services
 
             if (!await PreInstallation()) Rollback();
             if (CancellationTokenSource.IsCancellationRequested) return;
-            if (!await CopySourceFiles(InstallationConfiguraion.InstallDirPath + "\\Blazam\\")) Rollback();
+            if (!await ApplyProgramFilesAsync(InstallationConfiguraion.InstallDirPath + "\\Blazam\\")) Rollback();
             if (CancellationTokenSource.IsCancellationRequested) return;
 
             await Task.Run(() =>
@@ -36,7 +36,7 @@ namespace BlazamSetup.Services
                 if (CancellationTokenSource.IsCancellationRequested) return;
 
                 
-                if (InstallationConfiguraion.InstallationType == InstallType.Service && !ServiceManager.IsInstalled)
+                if (InstallationConfiguraion.InstallationType == InstallType.Service)
                 {
                     OnStepTitleChanged?.Invoke("Install Services");
                     OnProgress?.Invoke(0);
@@ -86,7 +86,7 @@ namespace BlazamSetup.Services
             {
                 string identity = "IIS_IUSRS";
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                    identity = "NT Authority/NetworkService";
+                    identity = "Network Service";
 
                 Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
                 FileSystemService.AddPermission(
@@ -109,65 +109,72 @@ namespace BlazamSetup.Services
         /// </summary>
         /// <param name="targetDirectory"></param>
         /// <returns></returns>
-        public static async Task<bool> CopySourceFiles(string targetDirectory)
+        private static async Task<bool> ApplyProgramFilesAsync(string targetDirectory)
         {
             return await Task.Run(() =>
             {
-                try
-                {
-                    OnStepTitleChanged?.Invoke("Copy Files");
-                    Log.Information("File copy started");
-
-                    bool copyingDownTree = false;
-                    if (targetDirectory.Contains(DownloadService.SourceDirectory))
-                    {
-                        copyingDownTree = true;
-                    }
-                    var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
-                    var fileIndex = 0;
-
-                    if (Directory.Exists(DownloadService.SetupTempDirectory))
-                    {
-                        var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
-
-                        if (copyingDownTree)
-                            directories = directories.Where(d => !d.Contains(targetDirectory));
-
-                        //Now Create all of the directories
-                        foreach (string dirPath in directories)
-                        {
-                            Log.Information("Creating directory: "+dirPath);
-
-                            Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                        }
-                        var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                        if (copyingDownTree)
-                            files = files.Where(f => !f.Contains(targetDirectory));
-                        //Copy all the files & Replaces any files with the same name
-                        foreach (string path in files)
-                        {
-                            var newPath = path.Replace(DownloadService.SourceDirectory, targetDirectory);
-                            Log.Information("Copying file: " + newPath);
-
-                            File.Copy(path, newPath, true);
-                            fileIndex++;
-                            OnProgress?.Invoke((fileIndex / totalFiles) * 100);
-                        }
-                        CopySetup(targetDirectory);
-                        return true;
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error Copying files {@Error}",ex);
-
-                    Console.WriteLine(ex.Message);
-                }
-                return false;
+                return ApplyProgramFiles(targetDirectory);
             });
 
+        }
+
+        private static bool ApplyProgramFiles(string targetDirectory)
+        {
+            try
+            {
+                OnStepTitleChanged?.Invoke("Copy Files");
+                Log.Information("File copy started");
+
+                bool copyingDownTree = false;
+                if (targetDirectory.Contains(DownloadService.SourceDirectory))
+                {
+                    copyingDownTree = true;
+                }
+                var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
+                var fileIndex = 0;
+
+                if (Directory.Exists(DownloadService.SetupTempDirectory))
+                {
+                    var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        directories = directories.Where(d => !d.Contains(targetDirectory));
+
+                    //Now Create all of the directories
+                    foreach (string dirPath in directories)
+                    {
+                        Log.Information("Creating directory: " + dirPath);
+
+                        Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
+                    }
+                    var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        files = files.Where(f => !f.Contains(targetDirectory));
+                    //Copy all the files & Replaces any files with the same name
+                    foreach (string path in files)
+                    {
+                        var newPath = path.Replace(DownloadService.SourceDirectory, targetDirectory);
+                        Log.Information("Copying file: " + newPath);
+
+                        File.Copy(path, newPath, true);
+                        fileIndex++;
+                        var progress = (double)fileIndex / totalFiles * 100.0;
+                        OnProgress?.Invoke(progress);
+                    }
+                    return true;
+
+                }
+                CopySetup(targetDirectory);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error Copying files {@Error}", ex);
+
+                Console.WriteLine(ex.Message);
+            }
+            return false;
         }
 
         private static void CopySetup(string targetDirectory)
@@ -197,6 +204,143 @@ namespace BlazamSetup.Services
 
                 CancellationTokenSource.Cancel();
             }
+        }
+
+        internal static async Task<bool> StartReparAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    
+                    var targetDirectory = InstallationConfiguraion.InstallDirPath;
+                    OnStepTitleChanged?.Invoke("Repairing Files");
+                    Log.Information("Repair File copy started");
+
+                    bool copyingDownTree = false;
+                    if (targetDirectory.Contains(DownloadService.SourceDirectory))
+                    {
+                        copyingDownTree = true;
+                    }
+                    var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
+                    var fileIndex = 0;
+
+                    if (Directory.Exists(DownloadService.SetupTempDirectory))
+                    {
+                        var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
+
+                        if (copyingDownTree)
+                            directories = directories.Where(d => !d.Contains(targetDirectory));
+
+                        //Now Create all of the directories
+                        foreach (string dirPath in directories)
+                        {
+                            Log.Information("Creating directory: " + dirPath);
+
+                            Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
+                        }
+                        var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
+
+                        if (copyingDownTree)
+                            files = files.Where(f => !f.Contains(targetDirectory));
+                        //Copy all the files & Replaces any files with the same name
+                        foreach (string path in files)
+                        {
+                            var newPath = path.Replace(DownloadService.SourceDirectory, targetDirectory);
+                            Log.Information("Copying file: " + newPath);
+
+                            File.Copy(path, newPath, true);
+                            fileIndex++;
+                            OnProgress?.Invoke((fileIndex / totalFiles) * 100);
+                        }
+                        CopySetup(targetDirectory);
+                        return true;
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error Copying files {@Error}", ex);
+
+                    Console.WriteLine(ex.Message);
+                }
+                return false;
+            });
+        }
+
+        private static bool RemoveProgramFiles(string installPath)
+        {
+            try
+            {
+                var totalFiles = FileSystemService.GetFileCount(installPath);
+                var fileIndex = 0;
+                foreach (var subFolder in Directory.GetDirectories(installPath))
+                {
+                    fileIndex = DeleteFolder(subFolder, fileIndex);
+                    Directory.Delete(subFolder);
+
+                }
+                foreach (var file in Directory.GetFiles(installPath))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                        fileIndex++;
+                        var progress = (double)fileIndex / totalFiles * 100.0;
+
+                        OnProgress?.Invoke(progress);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error removing application file {@File} {@Exception}", file, ex);
+
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error removing application files {@Exception}", ex);
+            }
+            return false;
+        }
+
+        private static int DeleteFolder(string subFolder, int fileIndex = 0)
+        {
+            foreach (var file in Directory.GetFiles(subFolder))
+            {
+                try
+                {
+                    File.Delete(file);
+                    fileIndex++;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            foreach (var folder in Directory.GetDirectories(subFolder))
+            {
+                DeleteFolder(folder, fileIndex);
+                Directory.Delete(folder);
+            }
+            return fileIndex;
+        }
+
+        internal static Task StartUninstallAsync()
+        {
+            return Task.Run(() =>
+            {
+                var installPath = InstallationConfiguraion.ProductInformation.InstallLocation;
+                RemoveProgramFiles(installPath);
+                IISManager.RemoveApplication();
+                ServiceManager.Uninstall();
+                RegistryService.DeleteUninstallKey();
+
+                MainWindow.EnableNext();
+                return true;
+            });
         }
     }
 }

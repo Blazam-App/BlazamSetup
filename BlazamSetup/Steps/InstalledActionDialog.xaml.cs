@@ -25,6 +25,8 @@ namespace BlazamSetup.Steps
         public InstalledActionDialog()
         {
             InitializeComponent();
+            if (InstallationConfiguraion.ExecutableExists)
+                exeNotFoundWarning.Visibility = Visibility.Collapsed;
         }
 
         private void Update_Checked(object sender, RoutedEventArgs e)

@@ -99,5 +99,15 @@ namespace BlazamSetup.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] nssm {
+            get {
+                object obj = ResourceManager.GetObject("nssm", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

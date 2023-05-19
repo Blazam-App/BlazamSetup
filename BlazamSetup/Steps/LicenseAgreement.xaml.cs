@@ -51,7 +51,8 @@ namespace BlazamSetup.Steps
         {
             base.OnVisualParentChanged(oldParent);
             if(oldParent==null)
-            MainWindow.NextStepButton.Content = "I Agree";
+                MainWindow.SetNextText("I Agree");
+
 
         }
 

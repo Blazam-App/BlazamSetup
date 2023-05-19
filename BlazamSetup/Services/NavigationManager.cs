@@ -17,7 +17,7 @@ namespace BlazamSetup.Services
 
         public static void Next()
         {
-            MainWindow.NextStepButton.Content = "Next";
+            MainWindow.SetNextText("Next");
 
             CurrentPage = CurrentPage.NextStep();
             MainWindow.InstallerFrame.Navigate(CurrentPage);
@@ -28,7 +28,7 @@ namespace BlazamSetup.Services
         {
             try
             {
-                MainWindow.NextStepButton.Content = "Next";
+                MainWindow.SetNextText("Next");
                 MainWindow.EnableNext();
                 MainWindow.NextStepButton.Visibility = System.Windows.Visibility.Visible;
                 MainWindow.InstallerFrame.GoBack();

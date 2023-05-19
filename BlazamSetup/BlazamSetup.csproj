@@ -410,9 +410,15 @@
     <Compile Include="Steps\DownloadInstallation.xaml.cs">
       <DependentUpon>DownloadInstallation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Steps\ExitStep.xaml.cs">
+      <DependentUpon>ExitStep.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Steps\IInstallationStep.cs" />
     <Compile Include="Steps\IISPrerequisiteCheck.xaml.cs">
       <DependentUpon>IISPrerequisiteCheck.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\InsallationProgressDisplay.xaml.cs">
+      <DependentUpon>InsallationProgressDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Steps\Install.xaml.cs">
       <DependentUpon>Install.xaml</DependentUpon>
@@ -428,6 +434,15 @@
     </Compile>
     <Compile Include="Steps\LicenseAgreement.xaml.cs">
       <DependentUpon>LicenseAgreement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\PostInstallation.xaml.cs">
+      <DependentUpon>PostInstallation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\Repair\Repair.xaml.cs">
+      <DependentUpon>Repair.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\Repair\WelcomeRepair.xaml.cs">
+      <DependentUpon>WelcomeRepair.xaml</DependentUpon>
     </Compile>
     <Compile Include="Steps\ServicePrerequisite.xaml.cs">
       <DependentUpon>ServicePrerequisite.xaml</DependentUpon>
@@ -487,7 +502,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Steps\ExitStep.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Steps\IISPrerequisiteCheck.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\InsallationProgressDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -508,6 +531,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Steps\LicenseAgreement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\PostInstallation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\Repair\Repair.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\Repair\WelcomeRepair.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -602,6 +637,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\nssm.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.5.5\build\Fody.targets" Condition="Exists('..\packages\Fody.6.5.5\build\Fody.targets')" />

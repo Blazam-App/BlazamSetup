@@ -16,11 +16,11 @@ namespace BlazamSetup
         /// <summary>
         /// This value identifies the application, it should never change
         /// </summary>
-        internal static string ProductGuid => "44f8501a-c549-4b27-8216-48480c65bc31";
+        internal static string ProductGuid => "44f8501a-c549-4b27-8216-48480c65bc31".ToUpper();
         /// <summary>
         /// This value identifies the version of the installer that was used, it should change every update.
         /// </summary>
-        internal static string UpdateGuid => "a146351b-8ff5-457e-9aac-c6604a21bd1b";
+        internal static string UpdateGuid => "a146351b-8ff5-457e-9aac-c6604a21bd1b".ToUpper();
 
         internal static ProductInformation ProductInformation { get; set; } = new ProductInformation();
 
@@ -52,5 +52,7 @@ namespace BlazamSetup
         public static string SetupTempDirectory => Path.GetTempPath() + "BlazamSetup\\";
 
         public static InstalledAction InstalledAction { get; internal set; }
+        public static string InstalledVersion { get; internal set; }
+        public static bool ExecutableExists => File.Exists(ProductInformation.InstallLocation + Path.DirectorySeparatorChar + "Blazam.exe");
     }
 }

@@ -50,7 +50,7 @@ namespace BlazamSetup.Steps
                         DatabasePathLabel.Content = "Database Server";
 
                     }
-                    MainWindow.NextStepButton.Content = "Install";
+                    MainWindow.SetNextText("Install");
                 });
 
         }

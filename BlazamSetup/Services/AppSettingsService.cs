@@ -19,7 +19,7 @@ namespace BlazamSetup.Services
         public static bool Configure()
         {
 
-            string path = InstallationConfiguraion.InstallDirPath + @"Blazam\\";
+            string path = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + @"\\Blazam\\");
             
 
             string jsonString = System.IO.File.ReadAllText(path+"appsettings.json");
@@ -41,24 +41,6 @@ namespace BlazamSetup.Services
             File.WriteAllText(Path.Combine(path, "appsettings.json"), newJson.ToString());
 
 
-            //var builder = new ConfigurationBuilder()
-            //    .SetBasePath(path)
-            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            //var configuration = builder.Build();
-            //configuration["EncryptionKey"] = RandomString();
-            //configuration["HTTPPort"] = InstallationConfiguraion.WebHostConfiguration.HttpPort.ToString();
-            //configuration["HTTPPort"] = InstallationConfiguraion.WebHostConfiguration.HttpsPort.ToString();
-            //configuration["ListeningAddress"] = InstallationConfiguraion.WebHostConfiguration.ListeningAddress;
-            //configuration["DatabaseType"] = InstallationConfiguraion.DatabaseType.ToString();
-            //configuration["ConnectionStrings:DBConnectionString"] = InstallationConfiguraion.DatabaseConfiguration.ToAppSettingsString();
-            ////File.WriteAllText(Path.Combine(path, "appsettings.json"), configuration.ToString());
-            //// Save changes to appsettings.json
-            //using (var stream = new FileStream("appsettings.json", FileMode.OpenOrCreate))
-            //{
-            //    var json = JsonConvert.SerializeObject(configuration.AsEnumerable().ToList(), Formatting.Indented);
-            //    var str = configuration.ToString();
-            //    //configuration.Save(stream);
-            //}
             return true;
         }
 

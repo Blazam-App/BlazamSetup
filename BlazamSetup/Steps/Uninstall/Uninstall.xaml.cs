@@ -1,5 +1,6 @@
 ﻿using BlazamSetup.Services;
 using Org.BouncyCastle.Asn1.X509;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,88 +28,26 @@ namespace BlazamSetup.Steps.Uninstall
         public Uninstall()
         {
             InitializeComponent();
-            CurrentDispatcher = this.Dispatcher;
+           
+            MainWindow.DisableNext();
+       
+            InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
             RunUninstall();
         }
 
-        private void RunUninstall()
+        private async void RunUninstall()
         {
-            Task.Run(() =>
-            {
-                var installPath = InstallationConfiguraion.ProductInformation.InstallLocation;
-                RemoveApplicationFiles(installPath);
-                RegistryService.DeleteUninstallKey();
-                ServiceManager.Uninstall();
-                MainWindow.EnableNext();
-                return true;
-            });
+            await InstallationService.StartUninstallAsync();
+            App.Quit();
         }
 
-        private void RemoveApplicationFiles(string installPath)
-        {
-            var totalFiles = FileSystemService.GetFileCount(installPath);
-            var fileIndex = 0;
-            foreach (var subFolder in Directory.GetDirectories(installPath))
-            {
-                fileIndex=DeleteFolder(subFolder, fileIndex);
-                Directory.Delete(subFolder);
-                StepProgress = fileIndex / totalFiles * 100;
+      
 
-            }
-            foreach (var file in Directory.GetFiles(installPath))
-            {
-                try
-                {
-                    File.Delete(file);
-                    fileIndex++;
-                    StepProgress = fileIndex / totalFiles * 100;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-        }
-
-        private int DeleteFolder(string subFolder,int fileIndex=0)
-        {
-            foreach(var file in Directory.GetFiles(subFolder))
-            {
-                try
-                {
-                    File.Delete(file);
-                    fileIndex++;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-            foreach(var folder in Directory.GetDirectories(subFolder))
-            {
-                DeleteFolder(folder, fileIndex);
-                Directory.Delete(folder);
-            }
-            return fileIndex;
-        }
-
-        private double stepProgress;
-
-        public double StepProgress
-        {
-            get => stepProgress; set
-            {
-                stepProgress = value;
-                CurrentDispatcher.Invoke(() => { InstallProgressBar.Value = value; });
-
-            }
-        }
-
-        public Dispatcher CurrentDispatcher { get; }
+       
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            throw new NotImplementedException();
+            return new ExitStep();
         }
     }
 }

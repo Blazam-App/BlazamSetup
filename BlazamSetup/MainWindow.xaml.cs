@@ -6,6 +6,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -40,8 +41,11 @@ namespace BlazamSetup
                 NextStepButton = NextButton;
                 MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
                 if (RegistryService.InstallationExists)
+                {
                     InstallationConfiguraion.ProductInformation = RegistryService.GetProductInformation();
-
+                    
+                    InstallationConfiguraion.InstalledVersion = FileSystemService.GetFileVersion(InstallationConfiguraion.ProductInformation.InstallLocation);
+                }
                 if (App.StartupArgs.Args.Any(arg => arg.StartsWith("/u")))
                 {
                     Log.Information("Uninstaller Started");
@@ -160,6 +164,15 @@ namespace BlazamSetup
             CurrentDispatcher.Invoke(() =>
             {
                 LastStepButton.IsEnabled = false;
+
+            });
+        }
+
+        internal static void SetNextText(string text)
+        {
+            CurrentDispatcher.Invoke(() =>
+            {
+                NextStepButton.Content = text;
 
             });
         }

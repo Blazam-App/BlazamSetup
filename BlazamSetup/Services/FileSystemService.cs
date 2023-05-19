@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
@@ -31,5 +33,78 @@ namespace BlazamSetup.Services
             return true;
         }
 
+        public static bool CopyDirectory(string source, string destination, ref AppEvent<double> progressEvent)
+        {
+
+            try
+            {
+                Log.Information("File copy started");
+
+                bool copyingDownTree = false;
+                if (destination.Contains(source))
+                {
+                    copyingDownTree = true;
+                }
+                var totalFiles = FileSystemService.GetFileCount(source);
+                var fileIndex = 0;
+
+                if (Directory.Exists(source))
+                {
+                    var directories = Directory.GetDirectories(source, "*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        directories = directories.Where(d => !d.Contains(destination));
+
+                    //Now Create all of the directories
+                    foreach (string dirPath in directories)
+                    {
+                        Log.Information("Creating directory: " + dirPath);
+
+                        Directory.CreateDirectory(dirPath.Replace(source, destination));
+                    }
+                    var files = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories).AsEnumerable();
+
+                    if (copyingDownTree)
+                        files = files.Where(f => !f.Contains(destination));
+                    //Copy all the files & Replaces any files with the same name
+                    foreach (string path in files)
+                    {
+                        var newPath = path.Replace(source, destination);
+                        Log.Information("Copying file: " + newPath);
+
+                        File.Copy(path, newPath, true);
+                        fileIndex++;
+                        progressEvent?.Invoke((fileIndex / totalFiles) * 100);
+                    }
+                    return true;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error Copying files {@Error}", ex);
+
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        internal static string GetFileVersion(string installLocation)
+        {
+            try
+            {
+                if (File.Exists(installLocation))
+                {
+                    return FileVersionInfo.GetVersionInfo(installLocation).ProductVersion;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error getting file version {@Exception}", ex);
+            }
+            return "";
+        }
     }
 }

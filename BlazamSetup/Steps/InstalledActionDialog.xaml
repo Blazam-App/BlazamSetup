@@ -9,12 +9,29 @@
     <Grid>
         <local:StepTitle Title="Choose an option"/>
         <StackPanel Margin="10,60,0,0">
+            <Label x:Name="exeNotFoundWarning" Background="#FFD64E4E" Foreground="White">
+                The installation is missing files! It may have been corrupted!
+            </Label>
+
             <Label>A Blazam installaion was found on this machine.</Label>
             <Label  Margin="0,0,0,20">Please choose from the following opions.</Label>
+
+            <StackPanel IsEnabled="False" Orientation="Horizontal">
+                <RadioButton x:Name="Update"  GroupName="InsalledAction" Content="Update" Checked="Update_Checked" VerticalAlignment="Center" Margin="0,0,30,0"/>
+                <Label Content="Update to the latest version."/>
+            </StackPanel>
             
-            <RadioButton x:Name="Update" IsChecked="true" GroupName="InsalledAction" Content="Update" Checked="Update_Checked"/>
-            <RadioButton x:Name="Repair"  GroupName="InsalledAction" Content="Repair" Checked="Repair_Checked"/>
-            <RadioButton x:Name="Remove" GroupName="InsalledAction" Content="Remove" Checked="Remove_Checked"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="Repair"  GroupName="InsalledAction" Content="Repair" Checked="Repair_Checked" VerticalAlignment="Center" Margin="0,0,36,0"/>
+                <Label Content="Attempt to repair the installation if it is not starting."/>
+
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="Remove"  IsChecked="true" GroupName="InsalledAction" Content="Remove" Checked="Remove_Checked" VerticalAlignment="Center" Margin="0,0,27,0"/>
+                <Label Content="Remove Blazam from this machine."/>
+
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

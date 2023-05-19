@@ -24,43 +24,18 @@ namespace BlazamSetup.Steps
     /// </summary>
     public partial class Install : UserControl, IInstallationStep
     {
-        private string currentStep;
 
         public Install()
         {
             InitializeComponent();
-            CurrentDispatcher = Dispatcher;
             MainWindow.DisableNext();
-            InstallationService.OnProgress += (value) => StepProgress = value;
-            InstallationService.OnStepTitleChanged += (value) => CurrentStep = value;
             InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
             RunInstallation();
         }
-        public string CurrentStep
-        {
-            get => currentStep; set
-            {
-                currentStep = value;
-                CurrentDispatcher.Invoke(() => { CurrentStepLabel.Content = value; });
-            }
-        }
-        private double stepProgress;
-
-        public double StepProgress
-        {
-            get => stepProgress; set
-            {
-                stepProgress = value;
-                CurrentDispatcher.Invoke(() => { InstallProgressBar.Value = value; });
-
-            }
-        }
-        public Dispatcher CurrentDispatcher { get; }
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            App.Quit();
-            return new Welcome();
+            return new PostInstallation();
         }
 
         private async void RunInstallation()
