@@ -64,6 +64,7 @@ namespace BlazamSetup.Services
                 //Post install steps
                 AppSettingsService.Copy();
                 AppSettingsService.Configure();
+                InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation)/1024);
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");
@@ -71,7 +72,7 @@ namespace BlazamSetup.Services
 
                 MainWindow.DisableBack();
                 MainWindow.EnableNext();
-
+                OnInstallationFinished?.Invoke();
             });
         }
 
@@ -162,10 +163,12 @@ namespace BlazamSetup.Services
                         var progress = (double)fileIndex / totalFiles * 100.0;
                         OnProgress?.Invoke(progress);
                     }
+
+                    CopySetup(targetDirectory);
+
                     return true;
 
                 }
-                CopySetup(targetDirectory);
 
             }
             catch (Exception ex)

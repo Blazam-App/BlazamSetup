@@ -29,9 +29,20 @@ namespace BlazamSetup.Steps
         {
             InitializeComponent();
             MainWindow.DisableNext();
-            InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
+            CurrentDispatcher = Dispatcher;
+            InstallationService.OnInstallationFinished += () =>
+            {
+                CurrentDispatcher.Invoke((() =>
+                {
+                    NavigationManager.Next();
+
+                }));
+            };
+
             RunInstallation();
         }
+
+        public Dispatcher CurrentDispatcher { get; }
 
         IInstallationStep IInstallationStep.NextStep()
         {
@@ -43,6 +54,6 @@ namespace BlazamSetup.Steps
             await InstallationService.StartInstallationAsync();
         }
 
-      
+
     }
 }

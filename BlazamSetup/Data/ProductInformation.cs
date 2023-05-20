@@ -13,9 +13,9 @@ namespace BlazamSetup
     {
         public string DisplayName { get; set; } = "Blazam";
         public string Publisher { get; set; } = "blazam.org";
-        public string DisplayVersion { get; set; } = "1.0";
+        public string DisplayVersion { get; set; } = "0.8";
         public string Comments { get; set; } = " A web based Active Directry management portal";
-        public int NoRepair { get; set; } = 1;
+        public int NoRepair { get; set; } = 0;
         public int NoModify { get; set; } = 1;
         public string Contact { get; set; } = "Blazam Support";
         public string HelpLink { get; set; } = "https://blazam.org";
@@ -25,8 +25,9 @@ namespace BlazamSetup
         public string InstallLocation { get; set; }= Path.GetFullPath(InstallationConfiguraion.InstallDirPath+Path.DirectorySeparatorChar + "Blazam");
         public string InstallDate { get; set; } = DateTime.UtcNow.Year + DateTime.UtcNow.Month.ToString("00") + DateTime.UtcNow.Day.ToString("00");
         public long Version { get; set; }
-        public int VersionMajor { get; set; } = 1;
-        public int VersionMinor { get; set; } = 0;
+        public int EstimatedSize { get; set; }
+        public int VersionMajor { get; set; } = 0;
+        public int VersionMinor { get; set; } = 8;
 
         public ProductInformation()
         {

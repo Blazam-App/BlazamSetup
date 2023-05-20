@@ -106,5 +106,17 @@ namespace BlazamSetup.Services
             }
             return "";
         }
+
+        internal static long GetDirectorySize(string installLocation, long size =0)
+        {
+            var info = new DirectoryInfo(installLocation);
+            size += info.EnumerateFiles().Sum(file => file.Length);
+            foreach(var dir in info.EnumerateDirectories())
+            {
+                size += GetDirectorySize(dir.FullName);
+            }
+
+            return size;
+        }
     }
 }
