@@ -26,7 +26,7 @@ namespace BlazamSetup.Services
                         site = serverManager.Sites.Add("Blazam",
                             "http",
                             httpBinding,
-                            InstallationConfiguraion.InstallDirPath + @"Blazam\\");
+                            InstallationConfiguraion.InstallDirPath + @"\\Blazam\\");
                     }
 
                     Log.Information("IIS Site {@Site}", site);
@@ -34,7 +34,7 @@ namespace BlazamSetup.Services
                     serverManager.CommitChanges();
 
                     FileSystemService.AddPermission(
-                        InstallationConfiguraion.InstallDirPath + @"Blazam\\",
+                        InstallationConfiguraion.InstallDirPath + "\\Blazam\\",
                         "IIS_IUSRS",
                         FileSystemRights.ReadAndExecute
                         );

@@ -31,7 +31,7 @@ namespace BlazamSetup.Steps
                 if (InstallationConfiguraion.InstallationType != InstallType.Service)
                 {
                     if (Directory.Exists("C:\\inetpub\\"))
-                        InstallationConfiguraion.InstallDirPath = "C:\\inetpub\\";
+                        InstallationConfiguraion.InstallDirPath = "C:\\inetpub";
 
 
 

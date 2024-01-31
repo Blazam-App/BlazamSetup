@@ -49,6 +49,9 @@ namespace BlazamSetup
         public static object ApplicationIdentity { get; internal set; }
         public static string ProgramDataDir => Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + Path.DirectorySeparatorChar + "Blazam";
 
+        /// <summary>
+        /// The path %temp%\BlazamSetup\
+        /// </summary>
         public static string SetupTempDirectory => Path.GetTempPath() + "BlazamSetup\\";
 
         public static InstalledAction InstalledAction { get; internal set; }
