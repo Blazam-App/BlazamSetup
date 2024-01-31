@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,12 +64,24 @@ namespace BlazamSetup.Services
 
                 //Post install steps
                 AppSettingsService.Copy();
+                if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
+                {
+                    string identity = "IIS_IUSRS";
+                    if (InstallationConfiguraion.InstallationType == InstallType.Service)
+                        identity = "Network Service";
+           
+                    Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
+                    FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
+                        identity,
+                        FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
+                        );
+                }
                 AppSettingsService.Configure();
                 InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation)/1024);
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");
-                Log.Information("Installation Finished Succeessfully");
+                Log.Information("Installation Finished Successfully");
 
                 MainWindow.DisableBack();
                 MainWindow.EnableNext();
@@ -93,7 +106,7 @@ namespace BlazamSetup.Services
                 FileSystemService.AddPermission(
                     InstallationConfiguraion.ProgramDataDir,
                     identity,
-                    System.Security.AccessControl.FileSystemRights.Write | System.Security.AccessControl.FileSystemRights.Modify | System.Security.AccessControl.FileSystemRights.ReadAndExecute
+                    FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
                     );
                 return true;
             }catch (Exception ex)
