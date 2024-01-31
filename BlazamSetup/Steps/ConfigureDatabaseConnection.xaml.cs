@@ -114,7 +114,7 @@ namespace BlazamSetup.Steps
                     }
                     testConn.Close();
                 }
-                TestSucceded();
+                TestSucceeded();
             }
             catch (Exception ex)
             {
@@ -124,12 +124,14 @@ namespace BlazamSetup.Steps
             }
         }
 
-        private void TestSucceded()
+        private void TestSucceeded()
         {
             CurrentDispatcher.Invoke(() =>
             {
                 TestPassed = true;
-                MainWindow.NextStepButton.IsEnabled = TestPassed;
+                MainWindow.NextStepButton.IsEnabled = true;
+
+                MainWindow.EnableNext();
             });
         }
 

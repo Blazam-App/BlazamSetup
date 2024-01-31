@@ -29,7 +29,8 @@ namespace BlazamSetup.Steps
             InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath+ "\\Blazam";
             DatabaseTypeLabel.Content =  InstallationConfiguraion.DatabaseType.ToString();
             DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory + "\\Blazam" : InstallationConfiguraion.DatabaseConfiguration.Server;
-   
+            MainWindow.NextStepButton.IsEnabled = true;
+
         }
 
         public Dispatcher CurrentDispatcher { get; }
@@ -51,6 +52,7 @@ namespace BlazamSetup.Steps
 
                     }
                     MainWindow.SetNextText("Install");
+                    MainWindow.EnableNext();
                 });
 
         }
