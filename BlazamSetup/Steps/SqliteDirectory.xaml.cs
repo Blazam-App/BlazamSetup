@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BlazamSetup.Steps
 {
@@ -45,8 +46,11 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
+            InstallationConfiguraion.InstallDirPath = directoryTextBox.Text;
             return new ConfirmSettings();
 
         }
+
+       
     }
 }
