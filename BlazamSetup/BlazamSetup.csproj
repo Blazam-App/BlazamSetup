@@ -447,8 +447,8 @@
     <Compile Include="Steps\ServicePrerequisite.xaml.cs">
       <DependentUpon>ServicePrerequisite.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Steps\SqliteDirectory.xaml.cs">
-      <DependentUpon>SqliteDirectory.xaml</DependentUpon>
+    <Compile Include="Steps\SQLiteDirectory.xaml.cs">
+      <DependentUpon>SQLiteDirectory.xaml</DependentUpon>
     </Compile>
     <Compile Include="Steps\StepTitle.xaml.cs">
       <DependentUpon>StepTitle.xaml</DependentUpon>
@@ -550,7 +550,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Steps\SqliteDirectory.xaml">
+    <Page Include="Steps\SQLiteDirectory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

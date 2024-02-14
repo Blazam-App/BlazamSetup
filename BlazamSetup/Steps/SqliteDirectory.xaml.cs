@@ -20,9 +20,9 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for SqliteDirectory.xaml
     /// </summary>
-    public partial class SqliteDirectory : UserControl,IInstallationStep
+    public partial class SQLiteDirectory : UserControl,IInstallationStep
     {
-        public SqliteDirectory()
+        public SQLiteDirectory()
         {
             InitializeComponent();
             directoryTextBox.Text = InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory;
@@ -37,16 +37,16 @@ namespace BlazamSetup.Steps
 
             if (dialog.ShowDialog() == true)
             {
-                InstallationConfiguraion.InstallDirPath = dialog.ResultPath;
+                InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = dialog.ResultPath;
                 CurrentDispatcher.Invoke(() => {
-                    directoryTextBox.Text = InstallationConfiguraion.InstallDirPath;
+                    directoryTextBox.Text = InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory;
                 });
             }
         }
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            InstallationConfiguraion.InstallDirPath = directoryTextBox.Text;
+            InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = directoryTextBox.Text;
             return new ConfirmSettings();
 
         }
