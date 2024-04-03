@@ -100,7 +100,7 @@ namespace BlazamSetup.Services
             {
                 string identity = "IIS_IUSRS";
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                    identity = "Network Service";
+                    identity = "NT AUTHORITY\\NetworkService";
 
                 Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
                 FileSystemService.AddPermission(
