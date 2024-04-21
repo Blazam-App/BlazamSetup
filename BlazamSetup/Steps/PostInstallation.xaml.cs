@@ -1,6 +1,7 @@
 ﻿using BlazamSetup.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +48,12 @@ namespace BlazamSetup.Steps
                     ServiceManager.Start();
                 }
             }
+            Process browser = new Process();
+            browser.StartInfo.CreateNoWindow = true;
+            browser.StartInfo.FileName="cmd.exe";
+            browser.StartInfo.Arguments = "/c start http://localhost/";
+            browser.Start();
+
            return new ExitStep();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
@@ -37,7 +37,7 @@ namespace BlazamSetup.Steps
 
             if (dialog.ShowDialog() == true)
             {
-                InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = dialog.ResultPath;
+                InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = Path.GetFullPath(dialog.ResultPath);
                 CurrentDispatcher.Invoke(() => {
                     directoryTextBox.Text = InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory;
                 });
@@ -46,7 +46,7 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = directoryTextBox.Text;
+            InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory = Path.GetFullPath(directoryTextBox.Text);
             return new ConfirmSettings();
 
         }

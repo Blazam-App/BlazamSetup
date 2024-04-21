@@ -31,7 +31,7 @@ namespace BlazamSetup.Steps
                 if (InstallationConfiguraion.InstallationType != InstallType.Service)
                 {
                     if (Directory.Exists("C:\\inetpub\\"))
-                        InstallationConfiguraion.InstallDirPath = "C:\\inetpub";
+                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath("C:\\inetpub");
 
 
 
@@ -54,7 +54,7 @@ namespace BlazamSetup.Steps
 
             if (dialog.ShowDialog() == true)
             {
-                InstallationConfiguraion.InstallDirPath = dialog.ResultPath;
+                InstallationConfiguraion.InstallDirPath = Path.GetFullPath(dialog.ResultPath);
                 CurrentDispatcher.Invoke(() =>
                 {
                     directoryTextBox.Text = InstallationConfiguraion.InstallDirPath;
