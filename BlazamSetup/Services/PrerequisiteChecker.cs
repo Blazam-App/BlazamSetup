@@ -20,7 +20,7 @@ namespace BlazamSetup.Services
 
                     foreach (var dir in dirs)
                     {
-                        if (dir.Contains("6."))
+                        if (dir.Contains("8."))
                         {
                             
 
