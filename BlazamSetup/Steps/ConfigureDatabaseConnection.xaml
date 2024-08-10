@@ -12,30 +12,30 @@
             <StackPanel  Width="250" HorizontalAlignment="Left" >
                 <StackPanel>
                     <Label Content="Server" />
-                    <TextBox  x:Name="ServerTextBox" TextChanged="ServerTextBox_TextChanged" />
+                    <TextBox TabIndex="0"  x:Name="ServerTextBox" TextChanged="ServerTextBox_TextChanged" />
                 </StackPanel>
 
                 <StackPanel>
                     <Label Content="Port" />
-                    <TextBox  x:Name="PortTextBox" TextChanged="PortTextBox_TextChanged"/>
+                    <TextBox TabIndex="1"  x:Name="PortTextBox" TextChanged="PortTextBox_TextChanged"/>
                 </StackPanel>
 
                 <StackPanel>
                     <Label Content="Database" />
-                    <TextBox  x:Name="DatabaseTextBox" TextChanged="DatabaseTextBox_TextChanged"/>
+                    <TextBox TabIndex="2"  x:Name="DatabaseTextBox" TextChanged="DatabaseTextBox_TextChanged"/>
                 </StackPanel>
 
                 <StackPanel>
                     <Label Content="Username" />
-                    <TextBox TextChanged="UsernameTextBox_TextChanged" x:Name="UsernameTextBox" />
+                    <TextBox TabIndex="3" TextChanged="UsernameTextBox_TextChanged" x:Name="UsernameTextBox" />
                 </StackPanel>
 
                 <StackPanel>
                     <Label Content="Password" />
-                    <PasswordBox PasswordChanged="PasswordTextBox_PasswordChanged"  x:Name="PasswordTextBox" />
+                    <PasswordBox TabIndex="4" PasswordChanged="PasswordTextBox_PasswordChanged"  x:Name="PasswordTextBox" />
                 </StackPanel>
 
-                <Button Content="Test Connection" Width="100" Margin="0,20,0,0" Click="Button_Click" />
+                <Button TabIndex="5" Content="Test Connection" Width="100" Margin="0,20,0,0" Click="Button_Click" />
             </StackPanel>
             <StackPanel Margin="10,0,0,0">
                 <Label Content="Status" HorizontalContentAlignment="Center"/>

@@ -31,7 +31,7 @@ namespace BlazamSetup.Steps
                 if (InstallationConfiguraion.InstallationType != InstallType.Service)
                 {
                     if (Directory.Exists("C:\\inetpub\\"))
-                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath("C:\\inetpub");
+                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath("C:\\inetpub\\Blazam");
 
 
 
@@ -39,7 +39,7 @@ namespace BlazamSetup.Steps
                 else
                 {
                     if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)))
-                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+                        InstallationConfiguraion.InstallDirPath = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)+"\\Blazam");
                 }
 
             }

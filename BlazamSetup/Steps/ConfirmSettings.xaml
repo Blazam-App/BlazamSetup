@@ -39,6 +39,8 @@
                 <Label Grid.Row="3" Grid.Column="0" x:Name="DatabasePathLabel"  Content="Database Server: "/>
                 <Label Grid.Row="3" Grid.Column="1" x:Name="DatabaseServerLabel" />
 
+                <Label Grid.Row="4" Grid.Column="0" x:Name="DatabaseDBLabel"  Content="Database Name: "/>
+                <Label Grid.Row="4" Grid.Column="1" x:Name="DatabaseNameLabel" />
             </Grid>
         </StackPanel>
 

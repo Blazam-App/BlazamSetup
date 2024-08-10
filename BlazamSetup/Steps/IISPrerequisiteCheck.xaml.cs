@@ -30,9 +30,11 @@ namespace BlazamSetup.Steps
         public IISPrerequisiteCheck()
         {
             InitializeComponent();
+            MainWindow.DisableNext();
             CurrentDispatcher = Dispatcher;
             DataContext = this;
             CheckForAspCoreHosting();
+            CheckForWebSockets();
         }
        
         void CheckForAspCoreHosting()
@@ -50,7 +52,39 @@ namespace BlazamSetup.Steps
                         frameworkCheckbox.IsChecked = false;
                     });
                 }
+            UpdateNextButton();
+        }
+
+        private void UpdateNextButton()
+        {
+            CurrentDispatcher.Invoke(() => {
+                if (websocketsCheckbox.IsChecked==true && frameworkCheckbox.IsChecked == true)
+                {
+                    MainWindow.EnableNext();
+                }
+            });
           
+        }
+
+        void CheckForWebSockets()
+        {
+            
+                if (PrerequisiteChecker.CheckForWebSockets())
+                {
+                    CurrentDispatcher.Invoke(() => {
+                        websocketsCheckbox.IsChecked = true;
+                        enableWebSocketsButton.IsEnabled = false;
+                    });
+                }
+                else
+                {
+                    CurrentDispatcher.Invoke(() => {
+                        websocketsCheckbox.IsChecked = false;
+                        enableWebSocketsButton.IsEnabled = true;
+                    });
+                }
+            UpdateNextButton();
+
         }
 
         IInstallationStep IInstallationStep.NextStep()
@@ -62,6 +96,29 @@ namespace BlazamSetup.Steps
         {
            
                 Process.Start("https://aka.ms/dotnet-download");
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            CurrentDispatcher.Invoke(() => {
+                enableWebSocketsButton.IsEnabled = false;
+                websocketProgressBar.Visibility = Visibility.Visible;
+            });
+            try
+            {
+                await Task.Run(() => {
+                    var dism = Process.Start("Dism", "/online /Enable-Feature /FeatureName:IIS-WebSockets /All");
+                    dism.WaitForExit();
+                });
+                
+            }catch (Exception ex)
+            {
+                
+            }
+            CurrentDispatcher.Invoke(() => {
+                websocketProgressBar.Visibility = Visibility.Hidden;
+            });
+            CheckForWebSockets();
         }
     }
 }

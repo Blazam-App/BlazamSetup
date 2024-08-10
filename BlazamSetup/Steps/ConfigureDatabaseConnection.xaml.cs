@@ -55,7 +55,7 @@ namespace BlazamSetup.Steps
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-          
+
             if (InstallationConfiguraion.DatabaseConfiguration.IsValid)
             {
                 PerformTest();
@@ -171,14 +171,14 @@ namespace BlazamSetup.Steps
         private void DatabaseTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             InstallationConfiguraion.DatabaseConfiguration.Database = DatabaseTextBox.Text;
-                TestFailed();
+            TestFailed();
 
         }
 
         private void PasswordTextBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            
-           InstallationConfiguraion.DatabaseConfiguration.Password = PasswordTextBox.Password;
+            if (!PasswordTextBox.Password.IsNullOrEmpty())
+                InstallationConfiguraion.DatabaseConfiguration.Password = PasswordTextBox.Password;
 
             TestFailed();
         }

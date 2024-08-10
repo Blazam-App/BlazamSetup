@@ -21,11 +21,11 @@ namespace BlazamSetup.Services
 
         internal static async Task StartInstallationAsync()
         {
-            Log.Information("Installattion Started {@InstallationType} {@InstallDirPath} {@DatabaseConfiguration}", InstallationConfiguraion.InstallationType, InstallationConfiguraion.InstallDirPath, InstallationConfiguraion.DatabaseConfiguration);
+            Log.Information("Installation Started {@InstallationType} {@InstallDirPath} {@DatabaseConfiguration}", InstallationConfiguraion.InstallationType, InstallationConfiguraion.InstallDirPath, InstallationConfiguraion.DatabaseConfiguration);
 
             if (!await PreInstallation()) Rollback();
             if (CancellationTokenSource.IsCancellationRequested) return;
-            if (!await ApplyProgramFilesAsync(InstallationConfiguraion.InstallDirPath + "\\Blazam\\")) Rollback();
+            if (!await ApplyProgramFilesAsync(InstallationConfiguraion.InstallDirPath)) Rollback();
             if (CancellationTokenSource.IsCancellationRequested) return;
 
             await Task.Run(() =>
@@ -36,7 +36,7 @@ namespace BlazamSetup.Services
                 if (!CreateProgramDataDirectory()) Rollback();
                 if (CancellationTokenSource.IsCancellationRequested) return;
 
-                
+
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
                 {
                     OnStepTitleChanged?.Invoke("Install Services");
@@ -69,7 +69,7 @@ namespace BlazamSetup.Services
                     string identity = "IIS_IUSRS";
                     if (InstallationConfiguraion.InstallationType == InstallType.Service)
                         identity = "Network Service";
-           
+
                     Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
                     FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
                         identity,
@@ -77,14 +77,13 @@ namespace BlazamSetup.Services
                         );
                 }
                 AppSettingsService.Configure();
-                InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation)/1024);
+                InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation) / 1024);
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");
                 Log.Information("Installation Finished Successfully");
 
                 MainWindow.DisableBack();
-                MainWindow.EnableNext();
                 OnInstallationFinished?.Invoke();
             });
         }
@@ -109,7 +108,8 @@ namespace BlazamSetup.Services
                     FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
                     );
                 return true;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.Error("Error creating program data directory: {@Error}", ex);
 
@@ -221,67 +221,47 @@ namespace BlazamSetup.Services
                 CancellationTokenSource.Cancel();
             }
         }
+        internal static async Task<bool> StartUpdateAsync()
+        {
 
+
+
+            var targetDirectory = InstallationConfiguraion.InstallDirPath;
+            OnStepTitleChanged("Downloading latest version...");
+            DownloadService.DownloadPercentageChanged = ((val) => { OnProgress(val); });
+            if (!await DownloadService.Download()) return false;
+            OnProgress(0);
+            if (DownloadService.LatestRelease.Name.Contains(InstallationConfiguraion.InstalledVersion))
+                throw new ApplicationUpdateException("Latest version is already installed.");
+            OnStepTitleChanged("Preparing update...");
+
+            if (!await PreInstallation()) return false;
+            if (CancellationTokenSource.IsCancellationRequested) return false;
+            OnStepTitleChanged("Applying update...");
+            //InstallationService.OnProgress= ((val) => { OnProgress(val); });
+            // InstallationService.OnInstallationFinished= (() => { OnInstallationFinished(); });
+            if (!await ApplyProgramFilesAsync(InstallationConfiguraion.InstallDirPath)) return false;
+            if (CancellationTokenSource.IsCancellationRequested) return false;
+
+            OnInstallationFinished?.Invoke();
+            return true;
+        }
         internal static async Task<bool> StartReparAsync()
         {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    
-                    var targetDirectory = InstallationConfiguraion.InstallDirPath;
-                    OnStepTitleChanged?.Invoke("Repairing Files");
-                    Log.Information("Repair File copy started");
 
-                    bool copyingDownTree = false;
-                    if (targetDirectory.Contains(DownloadService.SourceDirectory))
-                    {
-                        copyingDownTree = true;
-                    }
-                    var totalFiles = FileSystemService.GetFileCount(DownloadService.SourceDirectory);
-                    var fileIndex = 0;
 
-                    if (Directory.Exists(DownloadService.SetupTempDirectory))
-                    {
-                        var directories = Directory.GetDirectories(DownloadService.SourceDirectory, "*", SearchOption.AllDirectories).AsEnumerable();
 
-                        if (copyingDownTree)
-                            directories = directories.Where(d => !d.Contains(targetDirectory));
+            var targetDirectory = InstallationConfiguraion.InstallDirPath;
+            OnStepTitleChanged("Downloading current version...");
+            DownloadService.DownloadPercentageChanged = ((val) => { OnProgress(val); });
+            if (!await DownloadService.Download(InstallationConfiguraion.InstalledVersion)) return false;
+            if (!await PreInstallation()) return false;
+            if (CancellationTokenSource.IsCancellationRequested) return false;
+            if (!await ApplyProgramFilesAsync(InstallationConfiguraion.InstallDirPath)) return false;
+            if (CancellationTokenSource.IsCancellationRequested) return false;
+            OnInstallationFinished?.Invoke();
 
-                        //Now Create all of the directories
-                        foreach (string dirPath in directories)
-                        {
-                            Log.Information("Creating directory: " + dirPath);
-
-                            Directory.CreateDirectory(dirPath.Replace(DownloadService.SourceDirectory, targetDirectory));
-                        }
-                        var files = Directory.GetFiles(DownloadService.SourceDirectory, "*.*", SearchOption.AllDirectories).AsEnumerable();
-
-                        if (copyingDownTree)
-                            files = files.Where(f => !f.Contains(targetDirectory));
-                        //Copy all the files & Replaces any files with the same name
-                        foreach (string path in files)
-                        {
-                            var newPath = path.Replace(DownloadService.SourceDirectory, targetDirectory);
-                            Log.Information("Copying file: " + newPath);
-
-                            File.Copy(path, newPath, true);
-                            fileIndex++;
-                            OnProgress?.Invoke((fileIndex / totalFiles) * 100);
-                        }
-                        CopySetup(targetDirectory);
-                        return true;
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error Copying files {@Error}", ex);
-
-                    Console.WriteLine(ex.Message);
-                }
-                return false;
-            });
+            return true;
         }
 
         private static bool RemoveProgramFiles(string installPath)

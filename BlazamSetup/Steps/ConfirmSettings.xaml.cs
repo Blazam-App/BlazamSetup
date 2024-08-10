@@ -26,9 +26,10 @@ namespace BlazamSetup.Steps
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
             InstallationTypeLabel.Content = InstallationConfiguraion.InstallationType.ToString();
-            InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath+ "\\Blazam";
+            InstallationPathLabel.Content = InstallationConfiguraion.InstallDirPath;
             DatabaseTypeLabel.Content =  InstallationConfiguraion.DatabaseType.ToString();
-            DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory + "\\Blazam" : InstallationConfiguraion.DatabaseConfiguration.Server;
+            DatabaseServerLabel.Content = InstallationConfiguraion.DatabaseType==DBType.Sqlite?InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory : InstallationConfiguraion.DatabaseConfiguration.Server;
+            DatabaseNameLabel.Content = InstallationConfiguraion.DatabaseConfiguration.Database;
             MainWindow.NextStepButton.IsEnabled = true;
 
         }
@@ -45,10 +46,12 @@ namespace BlazamSetup.Steps
                     if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
                     {
                         DatabasePathLabel.Content = "Database Path";
+                        DatabaseDBLabel.Visibility = Visibility.Hidden;
                     }
                     else
                     {
                         DatabasePathLabel.Content = "Database Server";
+                        DatabaseDBLabel.Visibility = Visibility.Visible;
 
                     }
                     MainWindow.SetNextText("Install");
