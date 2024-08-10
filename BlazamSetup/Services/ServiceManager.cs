@@ -49,9 +49,9 @@ namespace BlazamSetup.Services
             if (!IsInstalled)
             {
                 CreateTempNSSM();
-                var path = InstallationConfiguraion.InstallDirPath + "\\Blazam\\nssm.exe";
+                var path = InstallationConfiguraion.InstallDirPath + "\\nssm.exe";
 
-                var arguments = "install " + ServiceName + " \"" + InstallationConfiguraion.InstallDirPath + "\\Blazam\\blazam.exe\"";
+                var arguments = "install " + ServiceName + " \"" + InstallationConfiguraion.InstallDirPath + "\\blazam.exe\"";
                 Process.Start(path, arguments).WaitForExit();
                 arguments = "set " + ServiceName + " ObjectName \"NT AUTHORITY\\Network Service\" \"\"";
                 Process.Start(path, arguments).WaitForExit();

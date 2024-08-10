@@ -25,12 +25,18 @@ namespace BlazamSetup.Steps
         public PostInstallation()
         {
             InitializeComponent();
+            MainWindow.DisableBack();
+
         }
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);
             if (oldParent == null)
+            {
+                MainWindow.EnableNext();
+                MainWindow.DisableBack();
                 MainWindow.SetNextText("Finish");
+            }
 
 
         }

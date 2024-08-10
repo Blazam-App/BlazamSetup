@@ -14,14 +14,15 @@
             </Label>
 
             <Label>A Blazam installaion was found on this machine.</Label>
+            <Label x:Name="installedVrsionLabel" Visibility="Hidden"></Label>
             <Label  Margin="0,0,0,20">Please choose from the following opions.</Label>
 
-            <StackPanel IsEnabled="False" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="Update"  GroupName="InsalledAction" Content="Update" Checked="Update_Checked" VerticalAlignment="Center" Margin="0,0,30,0"/>
                 <Label Content="Update to the latest version."/>
             </StackPanel>
 
-            <StackPanel  IsEnabled="False" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="Repair"  GroupName="InsalledAction" Content="Repair" Checked="Repair_Checked" VerticalAlignment="Center" Margin="0,0,36,0"/>
                 <Label Content="Attempt to repair the installation if it is not starting."/>
 

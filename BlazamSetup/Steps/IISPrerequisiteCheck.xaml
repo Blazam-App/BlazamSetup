@@ -8,9 +8,20 @@
              d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
         <local:StepTitle Title="IIS Pre-Requisites"/>
+        <StackPanel Margin="10,40,10,0">
+            <CheckBox x:Name="frameworkCheckbox" IsEnabled="false" Content="ASP .NET 8 Core Web Hosting Bundle" Margin="0,0,0,5" />
+            <CheckBox x:Name="websocketsCheckbox" IsEnabled="false" Content="IIS WebSockets Feature Enabled" Margin="0,0,0,5"/>
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="ASP NET Core apps running under IIS require both the 32-bit and 64-bit runtimes which are included in the Hosting Bundle." 
+                  Margin="10,150,0,0" 
+                  FontSize="11"/>       
+        </StackPanel>
 
-        <CheckBox x:Name="frameworkCheckbox" IsEnabled="false" Content="ASP .NET 8 Core Web Hosting Bundle" Margin="10,40,0,0"/>
-        <Label Content="ASP NET Core apps running under IIS require both the 32-bit and 64-bit Hosting Bundles" Margin="10,50,0,0" FontSize="11"/>
-        <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20" Content="Download Prerequisites" Click="Button_Click"  />
+
+        <StackPanel Margin="10,150,10,20" VerticalAlignment="Bottom">
+            <ProgressBar Margin="0,0,0,10" Height="5" x:Name="websocketProgressBar" IsIndeterminate="true" Visibility="Hidden"/>
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,25" Content="Download Net Core 8" Click="Button_Click"  />
+            <Button x:Name="enableWebSocketsButton" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,0" Content="Enable WebSocket Protocol" Click="Button_Click_1"  />
+        </StackPanel>
+
     </Grid>
 </UserControl>

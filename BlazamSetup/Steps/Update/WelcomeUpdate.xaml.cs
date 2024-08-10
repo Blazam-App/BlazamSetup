@@ -13,21 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BlazamSetup.Steps.Repair
+namespace BlazamSetup.Steps.Update
 {
     /// <summary>
     /// Interaction logic for WelcomeRepair.xaml
     /// </summary>
-    public partial class WelcomeRepair : UserControl,IInstallationStep
+    public partial class WelcomeUpdate : UserControl,IInstallationStep
     {
-        public WelcomeRepair()
+        public WelcomeUpdate()
         {
             InitializeComponent();
         }
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            return new Repair();
+            return new Update();
         }
     }
 }

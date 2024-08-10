@@ -95,7 +95,9 @@ namespace BlazamSetup.Services
             {
                 if (File.Exists(installLocation))
                 {
-                    return FileVersionInfo.GetVersionInfo(installLocation).ProductVersion;
+                    var fvi = FileVersionInfo.GetVersionInfo(installLocation);
+                    string version = fvi.FileVersion+"."+fvi.ProductVersion;
+                    return version; 
 
                 }
 

@@ -86,6 +86,27 @@ namespace BlazamSetup.Services
                 }
             }
         }
+        public static string InstallLocation
+        {
+            get
+            {
+                try
+                {
+                    var key = OpenKey();
+                    if (key == null) return null;
+                    var installLocation = key.GetValue("InstallLocation");
+                    if (installLocation is string installLocationString && !installLocationString.IsNullOrEmpty())
+                    {
+                        return installLocationString;
+                    }
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+        }
         public static bool CreateUninstallKey()
         {
             try

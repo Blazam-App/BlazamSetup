@@ -19,7 +19,7 @@ namespace BlazamSetup.Services
         public static bool Configure()
         {
 
-            string path = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + @"\\Blazam\\");
+            string path = Path.GetFullPath(InstallationConfiguraion.InstallDirPath);
             
 
             string jsonString = System.IO.File.ReadAllText(path+"appsettings.json");
@@ -46,8 +46,8 @@ namespace BlazamSetup.Services
 
         internal static void Copy()
         {
-            string exampleFilePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.example.json";
-            string filePath = InstallationConfiguraion.InstallDirPath + "\\Blazam\\appsettings.json";
+            string exampleFilePath = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + "\\appsettings.example.json");
+            string filePath = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + "\\appsettings.json");
          
                 if (File.Exists(exampleFilePath))
                     File.Copy(exampleFilePath, filePath,true);
