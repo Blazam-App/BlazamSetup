@@ -58,7 +58,7 @@ namespace BlazamSetup
                 connectionString = InsertValue(connectionString, "Database", Database);
                 connectionString = InsertValue(connectionString,
                     InstallationConfiguraion.DatabaseType==DBType.MySQL?"User": "User Id",
-                    Database);
+                    Username);
                 connectionString = InsertValue(connectionString, "Password", Password);
 
             }
