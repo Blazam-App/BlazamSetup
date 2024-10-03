@@ -20,7 +20,7 @@ namespace BlazamSetup
         /// <summary>
         /// This value identifies the version of the installer that was used, it should change every update.
         /// </summary>
-        internal static string UpdateGuid => "a146351b-8ff5-457e-9aac-c6604a21bd1b".ToUpper();
+        internal static string UpdateGuid => "410dd7f9-001d-4916-a991-5ca86987b709".ToUpper();
 
         internal static ProductInformation ProductInformation { get; set; } = new ProductInformation();
 
@@ -39,9 +39,9 @@ namespace BlazamSetup
         {
             get => installDirPath; set
             {
-                installDirPath = value;
-                ProductInformation.InstallLocation = Path.GetFullPath(value+"\\Blazam");
-                ProductInformation.UninstallString = '"'+Path.GetFullPath(value+"\\Blazam\\setup.exe")+"\" /u";
+                installDirPath = Path.GetFullPath(value + "\\"); 
+                ProductInformation.InstallLocation = Path.GetFullPath(value+"\\");
+                ProductInformation.UninstallString = '"'+Path.GetFullPath(value+"\\setup.exe")+"\" /u";
             }
         }
         internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();

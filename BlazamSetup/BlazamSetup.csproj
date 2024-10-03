@@ -438,6 +438,12 @@
     <Compile Include="Steps\PostInstallation.xaml.cs">
       <DependentUpon>PostInstallation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Steps\Update\Update.xaml.cs">
+      <DependentUpon>Update.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\Update\WelcomeUpdate.xaml.cs">
+      <DependentUpon>WelcomeUpdate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Steps\Repair\Repair.xaml.cs">
       <DependentUpon>Repair.xaml</DependentUpon>
     </Compile>
@@ -537,6 +543,14 @@
     <Page Include="Steps\PostInstallation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\Update\Update.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Steps\Update\WelcomeUpdate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Steps\Repair\Repair.xaml">
       <SubType>Designer</SubType>

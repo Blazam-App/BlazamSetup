@@ -1,4 +1,6 @@
-﻿using BlazamSetup.Steps.Uninstall;
+﻿using BlazamSetup.Steps.Repair;
+using BlazamSetup.Steps.Uninstall;
+using BlazamSetup.Steps.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,13 @@ namespace BlazamSetup.Steps
             InitializeComponent();
             if (InstallationConfiguraion.ExecutableExists)
                 exeNotFoundWarning.Visibility = Visibility.Collapsed;
+            if (!InstallationConfiguraion.InstalledVersion.IsNullOrEmpty())
+            {
+                installedVrsionLabel.Visibility = Visibility.Visible;
+                installedVrsionLabel.Content = "Version: "+InstallationConfiguraion.InstalledVersion;
+            }
+            
+
         }
 
         private void Update_Checked(object sender, RoutedEventArgs e)
@@ -50,6 +59,10 @@ namespace BlazamSetup.Steps
         {
            switch(InstallationConfiguraion.InstalledAction)
             {
+                case InstalledAction.Repair:
+                    return new WelcomeRepair();
+                case InstalledAction.Update:
+                    return new WelcomeUpdate();
                 case InstalledAction.Remove:
                 default:
                     return new WelcomeUninstall();

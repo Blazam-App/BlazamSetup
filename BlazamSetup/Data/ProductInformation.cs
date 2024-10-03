@@ -13,7 +13,7 @@ namespace BlazamSetup
     {
         public string DisplayName { get; set; } = "Blazam";
         public string Publisher { get; set; } = "blazam.org";
-        public string DisplayVersion { get; set; } = "0.8";
+        public string DisplayVersion { get; set; } = "1.0";
         public string Comments { get; set; } = " A web based Active Directry management portal";
         public int NoRepair { get; set; } = 0;
         public int NoModify { get; set; } = 1;

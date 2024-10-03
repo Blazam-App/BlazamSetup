@@ -15,36 +15,37 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace BlazamSetup.Steps.Repair
+namespace BlazamSetup.Steps.Update
 {
     /// <summary>
     /// Interaction logic for Repair.xaml
     /// </summary>
-    public partial class Repair : UserControl,IInstallationStep
+    public partial class Update : UserControl,IInstallationStep
     {
         private double stepProgress;
         private string currentStep;
 
-        public Repair()
+        public Update()
         {
             InitializeComponent();
             CurrentDispatcher = Dispatcher;
             MainWindow.DisableNext();
             InstallationService.OnProgress += (value) => StepProgress = value;
             InstallationService.OnStepTitleChanged += (value) => CurrentStep = value;
-            InstallationService.OnInstallationFinished += () => {
+            InstallationService.OnInstallationFinished += () => { 
                 MainWindow.EnableNext();
+
                 CurrentStepLabel.Content = "Finished";
-                };
-            RunRepair();
+            };
+            RunUpdate();
         }
 
-        private async void RunRepair()
+        private async void RunUpdate()
         {
             try
             {
 
-                _ =await  InstallationService.StartReparAsync();
+                _ =await  InstallationService.StartUpdateAsync();
             }catch (Exception ex)
             {
                 CurrentStepLabel.Content = "Failed";

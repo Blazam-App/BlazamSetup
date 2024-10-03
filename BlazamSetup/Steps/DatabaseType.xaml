@@ -9,7 +9,7 @@
     <Grid>
         <local:StepTitle Title="Database Type"/>
         <StackPanel Margin="10,60,0,0">
-            <RadioButton x:Name="SqliteRadioButton"  GroupName="DatabaseType" Content="File-Based (SQLite) [Acceptable for installations of up to 20 simultaneous app users]" Checked="Sqlite_Checked"/>
+            <RadioButton x:Name="SqliteRadioButton"  GroupName="DatabaseType" Content="File-Based (SQLite) [Only acceptable for testing]" Checked="Sqlite_Checked"/>
             <RadioButton x:Name="SqlRadioButton" GroupName="DatabaseType" Content="SQL Database (SQLExpress Compatible)" Checked="SQL_Checked"/>
             <RadioButton x:Name="MysqlRadioButton" GroupName="DatabaseType" Content="MySQL Database (MariaDB Compatible)" Checked="Mysql_Checked"/>
         </StackPanel>
