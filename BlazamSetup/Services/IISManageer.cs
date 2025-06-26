@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace BlazamSetup.Services
 {
@@ -35,7 +36,7 @@ namespace BlazamSetup.Services
 
                     FileSystemService.AddPermission(
                         Path.GetFullPath(InstallationConfiguraion.InstallDirPath),
-                        "IIS_IUSRS",
+                        new SecurityIdentifier(WellKnownSidType.IisIUSRSid, null),
                         FileSystemRights.ReadAndExecute
                         );
                     return true;

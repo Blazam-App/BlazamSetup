@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,13 +67,15 @@ namespace BlazamSetup.Services
                 AppSettingsService.Copy();
                 if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
                 {
-                    string identity = "IIS_IUSRS";
+                    SecurityIdentifier sid;
                     if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                        identity = "Network Service";
+                        sid = new SecurityIdentifier(WellKnownSidType.NetworkServiceSid, null);
+                    else
+                        sid = new SecurityIdentifier(WellKnownSidType.IisIUSRSid, null);
 
                     Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
                     FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
-                        identity,
+                        sid,
                         FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
                         );
                 }
@@ -97,14 +100,16 @@ namespace BlazamSetup.Services
         {
             try
             {
-                string identity = "IIS_IUSRS";
+                SecurityIdentifier sid;
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                    identity = "NT AUTHORITY\\NetworkService";
+                    sid = new SecurityIdentifier(WellKnownSidType.NetworkServiceSid, null);
+                else
+                    sid = new SecurityIdentifier(WellKnownSidType.IisIUSRSid, null);
 
                 Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
                 FileSystemService.AddPermission(
                     InstallationConfiguraion.ProgramDataDir,
-                    identity,
+                    sid,
                     FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
                     );
                 return true;

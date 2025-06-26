@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,14 +24,25 @@ namespace BlazamSetup.Services
 
         }
 
-        public static bool AddPermission(string path, string identity, FileSystemRights fileSystemRights)
+        public static bool AddPermission(string path, SecurityIdentifier sid, FileSystemRights fileSystemRights)
         {
+            try
+            {
+                DirectoryInfo dInfo = new DirectoryInfo(path);
+                DirectorySecurity dSecurity = dInfo.GetAccessControl();
 
-            DirectoryInfo dInfo = new DirectoryInfo(path);
-            DirectorySecurity dSecurity = dInfo.GetAccessControl();
-            dSecurity.AddAccessRule(new FileSystemAccessRule(identity, fileSystemRights, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
-            dInfo.SetAccessControl(dSecurity);
-            return true;
+                dSecurity.AddAccessRule(new FileSystemAccessRule(sid, fileSystemRights, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                dInfo.SetAccessControl(dSecurity);
+                Log.Information($"Successfully set permission for SID '{sid}' on path '{path}'.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Catching IdentityNotMappedException is no longer needed here as SID translation happens at the caller.
+                // Callers should handle IdentityNotMappedException if they are performing translations.
+                Log.Error($"Error setting permission for SID '{sid}' on path '{path}': {ex.Message}", ex);
+                return false;
+            }
         }
 
         public static bool CopyDirectory(string source, string destination, ref AppEvent<double> progressEvent)
