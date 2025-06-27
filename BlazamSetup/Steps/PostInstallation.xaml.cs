@@ -43,7 +43,7 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            if (startCheckBox.IsChecked==true)
+            if (startCheckBox.IsChecked == true)
             {
                 if (InstallationConfiguraion.InstallationType == InstallType.IIS)
                 {
@@ -53,13 +53,13 @@ namespace BlazamSetup.Steps
                 {
                     ServiceManager.Start();
                 }
-            }
-            Process browser = new Process();
-            browser.StartInfo.CreateNoWindow = true;
-            browser.StartInfo.FileName="cmd.exe";
-            browser.StartInfo.Arguments = "/c start http://localhost/";
-            browser.Start();
 
+                Process browser = new Process();
+                browser.StartInfo.CreateNoWindow = true;
+                browser.StartInfo.FileName = "cmd.exe";
+                browser.StartInfo.Arguments = "/c start http://localhost/";
+                browser.Start();
+            }
            return new ExitStep();
         }
 

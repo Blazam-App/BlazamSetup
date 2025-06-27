@@ -453,6 +453,9 @@
     <Compile Include="Steps\PostInstallation.xaml.cs">
       <DependentUpon>PostInstallation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Steps\Uninstall\UninstallResults.xaml.cs">
+      <DependentUpon>UninstallResults.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Steps\Update\Update.xaml.cs">
       <DependentUpon>Update.xaml</DependentUpon>
     </Compile>
@@ -556,6 +559,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Steps\PostInstallation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Steps\Uninstall\UninstallResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
