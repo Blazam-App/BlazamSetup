@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>default_logo2.ico</ApplicationIcon>
+    <ApplicationIcon>default_logo5.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiveDirectoryObjectPicker, Version=3.0.11.0, Culture=neutral, PublicKeyToken=515ab092c8839750, processorArchitecture=MSIL">
@@ -602,6 +602,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Resources\license.rtf" />
     <None Include="packages.config" />
@@ -653,6 +654,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\default_logo5.png" />
+    <Resource Include="default_logo5.ico" />
     <Content Include="Resources\nssm.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

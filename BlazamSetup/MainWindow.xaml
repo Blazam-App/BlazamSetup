@@ -20,7 +20,7 @@
             <Grid Margin="5,5,5,5" DockPanel.Dock="Left">
 
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/default_logo2.png" />
+                    <Image Source="/Resources/default_logo5.png" />
                     <Label Foreground="White" Content="Blazam Setup" Padding="5,0,5,0" Margin="0,0,0,0" VerticalContentAlignment="Center"/>
 
                 </StackPanel>
