@@ -18,8 +18,10 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for DatabaseType.xaml
     /// </summary>
-    public partial class DatabaseType : UserControl,IInstallationStep
+    public partial class DatabaseType : UserControl, IInstallationStep
     {
+        public int Order => 7;
+
         public DatabaseType()
         {
             InitializeComponent();

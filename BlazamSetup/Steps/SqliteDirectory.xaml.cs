@@ -20,7 +20,7 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for SqliteDirectory.xaml
     /// </summary>
-    public partial class SQLiteDirectory : UserControl,IInstallationStep
+    public partial class SQLiteDirectory : UserControl, IInstallationStep
     {
         public SQLiteDirectory()
         {
@@ -30,6 +30,8 @@ namespace BlazamSetup.Steps
         }
 
         public Dispatcher CurrentDispatcher { get; }
+
+        public int Order => 8;
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {

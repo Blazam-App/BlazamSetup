@@ -24,6 +24,8 @@ namespace BlazamSetup.Steps
     {
         public Dispatcher CurrentDispatcher { get; }
 
+        public int Order => 2;
+
         public DownloadInstallation()
         {
             InitializeComponent();

@@ -12,7 +12,7 @@ namespace BlazamSetup.Services
     {
         internal static IInstallationStep CurrentPage { get; set; } = new Welcome();
 
-
+        internal static AppEvent<IInstallationStep> OnPageChanged { get; set; }
 
 
         public static void Next()
@@ -21,6 +21,7 @@ namespace BlazamSetup.Services
 
             CurrentPage = CurrentPage.NextStep();
             MainWindow.InstallerFrame.Navigate(CurrentPage);
+            OnPageChanged?.Invoke(CurrentPage);
 
         }
 
@@ -32,7 +33,10 @@ namespace BlazamSetup.Services
                 MainWindow.EnableNext();
                 MainWindow.NextStepButton.Visibility = System.Windows.Visibility.Visible;
                 MainWindow.InstallerFrame.GoBack();
-            }catch(InvalidOperationException ex)
+                OnPageChanged?.Invoke(CurrentPage);
+
+            }
+            catch (InvalidOperationException ex)
             {
 
             }

@@ -21,6 +21,8 @@ namespace BlazamSetup.Steps
     /// </summary>
     public partial class ConfigureIIS : UserControl, IInstallationStep
     {
+        public int Order => 5;
+
         public ConfigureIIS()
         {
             InitializeComponent();

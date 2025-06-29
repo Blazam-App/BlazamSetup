@@ -47,6 +47,8 @@ namespace BlazamSetup.Steps
 
         }
 
+        public int Order => 1;
+
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);

@@ -27,6 +27,8 @@ namespace BlazamSetup.Steps
         public bool FrameworkInstalled { get; set; }
         public Dispatcher CurrentDispatcher { get; }
 
+        public int Order => 4;
+
         public IISPrerequisiteCheck()
         {
             InitializeComponent();

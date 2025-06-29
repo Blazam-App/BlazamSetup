@@ -28,6 +28,8 @@ namespace BlazamSetup.Steps.Uninstall
             MainWindow.DisableBack(); // Prevent going back to the uninstall progress screen
         }
 
+        public int Order => 3;
+
         IInstallationStep IInstallationStep.NextStep()
         {
             // This will cause the application to quit when ExitStep is instantiated.

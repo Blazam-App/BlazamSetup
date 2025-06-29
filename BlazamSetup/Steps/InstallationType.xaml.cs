@@ -20,6 +20,7 @@ namespace BlazamSetup.Steps
     /// </summary>
     public partial class InstallationType : UserControl, IInstallationStep
     {
+        public int Order => 3;
 
         public InstallationType()
         {

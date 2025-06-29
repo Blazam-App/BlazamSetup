@@ -20,7 +20,7 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for PostInstallation.xaml
     /// </summary>
-    public partial class PostInstallation : UserControl,IInstallationStep
+    public partial class PostInstallation : UserControl, IInstallationStep
     {
         public PostInstallation()
         {
@@ -28,6 +28,9 @@ namespace BlazamSetup.Steps
             MainWindow.DisableBack();
 
         }
+
+        public int Order => 11;
+
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);

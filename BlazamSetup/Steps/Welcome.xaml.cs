@@ -23,6 +23,7 @@ namespace BlazamSetup.Steps
     public partial class Welcome : UserControl,IInstallationStep
 
     {
+
         private LicenseAgreement _licenseAgreement;
 
         public Welcome()
@@ -32,7 +33,7 @@ namespace BlazamSetup.Steps
 
         }
 
-     
+        public int Order => 0;
 
         IInstallationStep IInstallationStep.NextStep()
         {

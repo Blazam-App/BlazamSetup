@@ -18,12 +18,14 @@ namespace BlazamSetup.Steps.Repair
     /// <summary>
     /// Interaction logic for WelcomeRepair.xaml
     /// </summary>
-    public partial class WelcomeRepair : UserControl,IInstallationStep
+    public partial class WelcomeRepair : UserControl, IInstallationStep
     {
         public WelcomeRepair()
         {
             InitializeComponent();
         }
+
+        public int Order => 1;
 
         IInstallationStep IInstallationStep.NextStep()
         {

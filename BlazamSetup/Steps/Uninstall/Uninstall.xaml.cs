@@ -37,6 +37,9 @@ namespace BlazamSetup.Steps.Uninstall
         }
 
         public Dispatcher CurrentDispatcher { get; }
+
+        public int Order => 2;
+
         private async void RunUninstall()
         {
             await InstallationService.StartUninstallAsync();

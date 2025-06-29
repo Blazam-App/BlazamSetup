@@ -19,7 +19,7 @@ namespace BlazamSetup.Steps.Uninstall
     /// <summary>
     /// Interaction logic for WelcomeUninstall.xaml
     /// </summary>
-    public partial class WelcomeUninstall : UserControl,IInstallationStep
+    public partial class WelcomeUninstall : UserControl, IInstallationStep
     {
         public WelcomeUninstall()
         {
@@ -33,6 +33,8 @@ namespace BlazamSetup.Steps.Uninstall
             }
 
         }
+
+        public int Order => 1;
 
         IInstallationStep IInstallationStep.NextStep()
         {

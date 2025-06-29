@@ -394,6 +394,12 @@
     <Compile Include="FolderPicker.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Data\InstallationConfiguraion.cs" />
+    <Compile Include="InstallStepControl.xaml.cs">
+      <DependentUpon>InstallStepControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstallStepDisplay.xaml.cs">
+      <DependentUpon>InstallStepDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\ApplicationUpdateException.cs" />
     <Compile Include="Services\AppSettingsService.cs" />
     <Compile Include="Services\DownloadService.cs" />
@@ -486,6 +492,14 @@
     <Compile Include="Steps\Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
+    <Page Include="InstallStepControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InstallStepDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

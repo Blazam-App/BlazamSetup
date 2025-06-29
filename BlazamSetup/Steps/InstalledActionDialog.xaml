@@ -14,6 +14,7 @@
             </Label>
 
             <Label>A Blazam installaion was found on this machine.</Label>
+            <Label x:Name="installedPathLabel" Visibility="Hidden"></Label>
             <Label x:Name="installedVrsionLabel" Visibility="Hidden"></Label>
             <Label  Margin="0,0,0,20">Please choose from the following opions.</Label>
 

@@ -19,7 +19,7 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for ConfirmSettings.xaml
     /// </summary>
-    public partial class ConfirmSettings : UserControl,IInstallationStep
+    public partial class ConfirmSettings : UserControl, IInstallationStep
     {
         public ConfirmSettings()
         {
@@ -36,7 +36,8 @@ namespace BlazamSetup.Steps
 
         public Dispatcher CurrentDispatcher { get; }
 
-        
+        public int Order => 9;
+
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);
