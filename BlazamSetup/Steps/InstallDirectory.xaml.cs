@@ -48,6 +48,8 @@ namespace BlazamSetup.Steps
 
         public Dispatcher CurrentDispatcher { get; }
 
+        public int Order => 6;
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderPicker() { InputPath = InstallationConfiguraion.InstallDirPath };

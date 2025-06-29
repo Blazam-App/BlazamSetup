@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,15 +67,40 @@ namespace BlazamSetup.Services
                 AppSettingsService.Copy();
                 if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
                 {
-                    string identity = "IIS_IUSRS";
+                    SecurityIdentifier sid;
                     if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                        identity = "Network Service";
+                    {
+                        sid = new SecurityIdentifier(WellKnownSidType.NetworkServiceSid, null);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            sid = (SecurityIdentifier)new NTAccount("IIS_IUSRS").Translate(typeof(SecurityIdentifier));
+                        }
+                        catch (IdentityNotMappedException ex)
+                        {
+                            Log.Error("Failed to translate IIS_IUSRS to SID for SqliteDirectory permissions. IIS may not be installed or configured correctly. {@Error}", ex);
+                            // This might lead to a failure later or be caught by Rollback() if AddPermission fails.
+                            // Consider if a more direct Rollback() or cancellation is needed here.
+                            // For now, proceeding to allow AddPermission to potentially fail.
+                            return; // Or handle more gracefully, e.g., Rollback(); CancellationTokenSource.Cancel(); return;
+                        }
+                    }
 
                     Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
-                    FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
-                        identity,
-                        FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
-                        );
+                    if (sid != null) // Ensure sid was successfully created before attempting to use it
+                    {
+                        if (!FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
+                            sid,
+                            FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
+                            ))
+                        {
+                            Log.Warning($"Failed to set permissions for SID {sid} on SqliteDirectory. This might cause issues.");
+                            // Not calling Rollback() here directly, as AddPermission itself doesn't throw to stop the flow.
+                            // The installation might proceed with incorrect permissions.
+                        }
+                    }
                 }
                 AppSettingsService.Configure();
                 InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation) / 1024);
@@ -97,16 +123,34 @@ namespace BlazamSetup.Services
         {
             try
             {
-                string identity = "IIS_IUSRS";
+                SecurityIdentifier sid;
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
-                    identity = "NT AUTHORITY\\NetworkService";
+                {
+                    sid = new SecurityIdentifier(WellKnownSidType.NetworkServiceSid, null);
+                }
+                else
+                {
+                    try
+                    {
+                        sid = (SecurityIdentifier)new NTAccount("IIS_IUSRS").Translate(typeof(SecurityIdentifier));
+                    }
+                    catch (IdentityNotMappedException ex)
+                    {
+                        Log.Error("Failed to translate IIS_IUSRS to SID for ProgramDataDir permissions. IIS may not be installed or configured correctly. {@Error}", ex);
+                        return false;
+                    }
+                }
 
                 Directory.CreateDirectory(InstallationConfiguraion.ProgramDataDir);
-                FileSystemService.AddPermission(
+                if (!FileSystemService.AddPermission( // Check return value
                     InstallationConfiguraion.ProgramDataDir,
-                    identity,
+                    sid,
                     FileSystemRights.Write | FileSystemRights.Modify | FileSystemRights.ReadAndExecute
-                    );
+                    ))
+                {
+                    Log.Error($"Failed to set permissions for SID {sid} on ProgramDataDir.");
+                    return false; // Explicitly return false if AddPermission fails
+                }
                 return true;
             }
             catch (Exception ex)

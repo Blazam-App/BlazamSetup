@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="BlazamSetup.InstallStepDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BlazamSetup"
+             xmlns:steps="clr-namespace:BlazamSetup.Steps"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel x:Name="Stack">
+            <local:InstallStepControl x:Name="Welcome" Order="0" Label="Welcome"/>
+            <local:InstallStepControl x:Name="License" Order="1" Label="License"/>
+            <local:InstallStepControl x:Name="Download" Order="2" Label="Download"/>
+            <local:InstallStepControl x:Name="HostType"  Order="3" Label="Host Type"/>
+            <local:InstallStepControl x:Name="Prerequisites" Order="4" Label="Prerequisites"/>
+            <local:InstallStepControl x:Name="HostConfig" Order="5" Label="Host Config"/>
+            <local:InstallStepControl x:Name="Directory" Order="6" Label="Directory"/>
+            <local:InstallStepControl x:Name="DBType" Order="7" Label="DB Type"/>
+            <local:InstallStepControl x:Name="DBConfig" Order="8" Label="DB Config"/>
+            <local:InstallStepControl x:Name="ConfirmSettings" Order="9" Label="Confirm Settings"/>
+            <local:InstallStepControl x:Name="Install" Order="10" Label="Install"/>
+            <local:InstallStepControl x:Name="Summary" Order="11" Label="Summary"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

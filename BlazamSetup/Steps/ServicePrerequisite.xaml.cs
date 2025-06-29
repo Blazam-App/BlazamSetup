@@ -21,7 +21,7 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for ServicePrerequisite.xaml
     /// </summary>
-    public partial class ServicePrerequisite : UserControl,IInstallationStep
+    public partial class ServicePrerequisite : UserControl, IInstallationStep
     {
         public ServicePrerequisite()
         {
@@ -31,6 +31,8 @@ namespace BlazamSetup.Steps
         }
 
         public Dispatcher CurrentDispatcher { get; }
+
+        public int Order => 4;
 
         void CheckForAspCoreRuntime()
         {

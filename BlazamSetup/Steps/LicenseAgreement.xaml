@@ -7,13 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
-        <ScrollViewer>
-
+       
+        <ScrollViewer  x:Name="ScrollBox">
             <RichTextBox FontSize="8"  x:Name="LicenseTextBox" IsReadOnly="true">
-                <FlowDocument />
+                    <FlowDocument/>
 
-            </RichTextBox>
+                </RichTextBox>
         </ScrollViewer>
-
+           
     </Grid>
 </UserControl>

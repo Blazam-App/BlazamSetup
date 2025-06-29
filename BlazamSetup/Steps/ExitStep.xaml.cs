@@ -18,13 +18,15 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for Exit.xaml
     /// </summary>
-    public partial class ExitStep : UserControl,IInstallationStep
+    public partial class ExitStep : UserControl, IInstallationStep
     {
         public ExitStep()
         {
             InitializeComponent();
             App.Quit();
         }
+
+        public int Order => 12;
 
         IInstallationStep IInstallationStep.NextStep()
         {

@@ -24,6 +24,8 @@ namespace BlazamSetup.Steps
     {
         public Dispatcher CurrentDispatcher { get; }
 
+        public int Order => 2;
+
         public DownloadInstallation()
         {
             InitializeComponent();
@@ -33,6 +35,7 @@ namespace BlazamSetup.Steps
 
             DownloadService.DownloadPercentageChanged += DownloadProgressMade;
             _=DownloadLatestVersionAsync();
+            MainWindow.DisableNext();
         }
 
         IInstallationStep IInstallationStep.NextStep()

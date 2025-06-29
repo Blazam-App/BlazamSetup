@@ -20,7 +20,7 @@ namespace BlazamSetup.Steps.Repair
     /// <summary>
     /// Interaction logic for Repair.xaml
     /// </summary>
-    public partial class Repair : UserControl,IInstallationStep
+    public partial class Repair : UserControl, IInstallationStep
     {
         private double stepProgress;
         private string currentStep;
@@ -77,5 +77,7 @@ namespace BlazamSetup.Steps.Repair
             }
         }
         public Dispatcher CurrentDispatcher { get; }
+
+        public int Order => 1;
     }
 }

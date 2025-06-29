@@ -30,15 +30,24 @@ namespace BlazamSetup.Steps.Uninstall
             InitializeComponent();
            
             MainWindow.DisableNext();
-       
+
+            CurrentDispatcher = Dispatcher;
             InstallationService.OnInstallationFinished += () => MainWindow.EnableNext();
             RunUninstall();
         }
 
+        public Dispatcher CurrentDispatcher { get; }
+
+        public int Order => 2;
+
         private async void RunUninstall()
         {
             await InstallationService.StartUninstallAsync();
-            App.Quit();
+            await CurrentDispatcher.InvokeAsync((() =>
+            {
+                NavigationManager.Next();
+
+            }));
         }
 
       
@@ -47,7 +56,7 @@ namespace BlazamSetup.Steps.Uninstall
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            return new ExitStep();
+            return new UninstallResults();
         }
     }
 }

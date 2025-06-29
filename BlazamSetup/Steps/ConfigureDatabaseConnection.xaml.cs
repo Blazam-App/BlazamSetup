@@ -29,6 +29,8 @@ namespace BlazamSetup.Steps
         public Dispatcher CurrentDispatcher { get; }
         public bool TestPassed { get; private set; }
 
+        public int Order => 8;
+
         public ConfigureDatabaseConnection()
         {
             InitializeComponent();

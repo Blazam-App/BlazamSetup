@@ -1,5 +1,4 @@
-﻿using BlazamSetup.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,37 +12,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
-namespace BlazamSetup.Steps
+namespace BlazamSetup.Steps.Uninstall
 {
     /// <summary>
-    /// Interaction logic for Welcome.xaml
+    /// Interaction logic for UninstallResults.xaml
     /// </summary>
-    public partial class Welcome : UserControl,IInstallationStep
-
+    public partial class UninstallResults : UserControl, IInstallationStep
     {
-
-        private LicenseAgreement _licenseAgreement;
-
-        public Welcome()
+        public UninstallResults()
         {
             InitializeComponent();
-
-
+            MainWindow.EnableNext();
+            MainWindow.SetNextText("Finish");
+            MainWindow.DisableBack(); // Prevent going back to the uninstall progress screen
         }
 
-        public int Order => 0;
+        public int Order => 3;
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            if (_licenseAgreement == null)
-                _licenseAgreement = new LicenseAgreement();
-
-            return _licenseAgreement;
-           // return new LicenseAgreement();
+            // This will cause the application to quit when ExitStep is instantiated.
+            return new ExitStep();
         }
-
-      
     }
 }

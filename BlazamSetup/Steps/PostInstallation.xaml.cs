@@ -20,7 +20,7 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for PostInstallation.xaml
     /// </summary>
-    public partial class PostInstallation : UserControl,IInstallationStep
+    public partial class PostInstallation : UserControl, IInstallationStep
     {
         public PostInstallation()
         {
@@ -28,6 +28,9 @@ namespace BlazamSetup.Steps
             MainWindow.DisableBack();
 
         }
+
+        public int Order => 11;
+
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);
@@ -43,7 +46,7 @@ namespace BlazamSetup.Steps
 
         IInstallationStep IInstallationStep.NextStep()
         {
-            if (startCheckBox.IsChecked==true)
+            if (startCheckBox.IsChecked == true)
             {
                 if (InstallationConfiguraion.InstallationType == InstallType.IIS)
                 {
@@ -53,13 +56,13 @@ namespace BlazamSetup.Steps
                 {
                     ServiceManager.Start();
                 }
-            }
-            Process browser = new Process();
-            browser.StartInfo.CreateNoWindow = true;
-            browser.StartInfo.FileName="cmd.exe";
-            browser.StartInfo.Arguments = "/c start http://localhost/";
-            browser.Start();
 
+                Process browser = new Process();
+                browser.StartInfo.CreateNoWindow = true;
+                browser.StartInfo.FileName = "cmd.exe";
+                browser.StartInfo.Arguments = "/c start http://localhost/";
+                browser.Start();
+            }
            return new ExitStep();
         }
 

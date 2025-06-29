@@ -20,12 +20,14 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for ConfigureIdentity.xaml
     /// </summary>
-    public partial class ConfigureIdentity : UserControl,IInstallationStep
+    public partial class ConfigureIdentity : UserControl, IInstallationStep
     {
         public ConfigureIdentity()
         {
             InitializeComponent();
         }
+
+        public int Order => throw new NotImplementedException();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

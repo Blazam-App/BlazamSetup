@@ -44,6 +44,8 @@ namespace BlazamSetup.Steps
 
         public Dispatcher CurrentDispatcher { get; }
 
+        public int Order => 10;
+
         IInstallationStep IInstallationStep.NextStep()
         {
             return new PostInstallation();

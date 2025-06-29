@@ -21,8 +21,9 @@ namespace BlazamSetup.Steps
     /// <summary>
     /// Interaction logic for InstalledActionDialog.xaml
     /// </summary>
-    public partial class InstalledActionDialog : UserControl,IInstallationStep
+    public partial class InstalledActionDialog : UserControl, IInstallationStep
     {
+        public int Order => 0;
 
         public InstalledActionDialog()
         {
@@ -34,7 +35,11 @@ namespace BlazamSetup.Steps
                 installedVrsionLabel.Visibility = Visibility.Visible;
                 installedVrsionLabel.Content = "Version: "+InstallationConfiguraion.InstalledVersion;
             }
-            
+            if (!InstallationConfiguraion.InstallDirPath.IsNullOrEmpty())
+            {
+                installedPathLabel.Visibility = Visibility.Visible;
+                installedPathLabel.Content = "Path: "+InstallationConfiguraion.InstallDirPath;
+            }
 
         }
 

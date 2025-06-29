@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,14 +24,16 @@ namespace BlazamSetup.Services
 
         }
 
-        public static bool AddPermission(string path, string identity, FileSystemRights fileSystemRights)
+        public static bool AddPermission(string path, SecurityIdentifier sid, FileSystemRights fileSystemRights)
         {
-
             DirectoryInfo dInfo = new DirectoryInfo(path);
             DirectorySecurity dSecurity = dInfo.GetAccessControl();
-            dSecurity.AddAccessRule(new FileSystemAccessRule(identity, fileSystemRights, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+
+            dSecurity.AddAccessRule(new FileSystemAccessRule(sid, fileSystemRights, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
             dInfo.SetAccessControl(dSecurity);
+            Log.Information($"Successfully set permission for SID '{sid}' on path '{path}'.");
             return true;
+            // Exceptions will now propagate to the caller.
         }
 
         public static bool CopyDirectory(string source, string destination, ref AppEvent<double> progressEvent)
