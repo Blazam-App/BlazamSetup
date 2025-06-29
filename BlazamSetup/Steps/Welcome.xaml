@@ -9,7 +9,8 @@
              " d:DesignWidth="620" d:Background="White">
     <Grid>
         <local:StepTitle Title="Welcome"/>
-        <Label Content="This installation wizard will help you install Blazam." HorizontalAlignment="Left" Margin="32,52,0,0" VerticalAlignment="Top" />
+        <Label Content="Thank you for your interest in Blazam." HorizontalAlignment="Left" Margin="32,52,0,0" VerticalAlignment="Top" />
+        <Label Content="This installation wizard will guide you through the installation." HorizontalAlignment="Left" Margin="32,69,0,0" VerticalAlignment="Top" />
      
 
     </Grid>

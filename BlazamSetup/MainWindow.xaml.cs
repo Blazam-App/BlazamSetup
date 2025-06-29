@@ -33,6 +33,7 @@ namespace BlazamSetup
                 InstallerFrame = Frame;
                 LastStepButton = BackButton;
                 NextStepButton = NextButton;
+                ActionTextLabel = ActionLabel;
                 MainWindow.InstallerFrame.ContentRendered += InstallerFrame_ContentRendered;
                 if (RegistryService.InstallationExists)
                 {
@@ -84,17 +85,21 @@ namespace BlazamSetup
         }
 
         public static Frame InstallerFrame { get; private set; }
+        public static Label ActionTextLabel  { get; private set; }
         public static Button LastStepButton { get; private set; }
         public static Button NextStepButton { get; private set; }
         public static Dispatcher CurrentDispatcher { get; private set; }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
+            SetActionLabel("");
             NavigationManager.Next();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
+            SetActionLabel("");
+
             NavigationManager.Back();
         }
 
@@ -103,6 +108,15 @@ namespace BlazamSetup
             CurrentDispatcher.Invoke(() =>
             {
                 LastStepButton.Visibility = Visibility.Collapsed;
+
+            });
+
+        }
+         internal static void SetActionLabel(string text)
+        {
+            CurrentDispatcher.Invoke(() =>
+            {
+                ActionTextLabel.Content= text;
 
             });
 

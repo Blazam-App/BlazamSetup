@@ -35,6 +35,7 @@ namespace BlazamSetup.Steps
 
             DownloadService.DownloadPercentageChanged += DownloadProgressMade;
             _=DownloadLatestVersionAsync();
+            MainWindow.DisableNext();
         }
 
         IInstallationStep IInstallationStep.NextStep()

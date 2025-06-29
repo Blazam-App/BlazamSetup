@@ -1,4 +1,5 @@
 ﻿using BlazamSetup.Properties;
+using BlazamSetup.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,17 +29,33 @@ namespace BlazamSetup.Steps
         public LicenseAgreement()
         {
             InitializeComponent();
+            MainWindow.DisableNext();
+
             try
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 var license = Properties.Resources.license;
-               MemoryStream ms = new MemoryStream();
-                foreach(var bite in  license)
+                MemoryStream ms = new MemoryStream();
+                foreach (var bite in license)
                 {
                     ms.WriteByte((byte)bite);
                 }
 
                 LicenseTextBox.Selection.Load(ms, DataFormats.Rtf);
+                LicenseTextBox.LayoutUpdated += (s, e) =>
+                {
+                    if (NavigationManager.CurrentPage == this)
+                    {
+                        var tes = ScrollBox.VerticalOffset;
+                        if (ScrollBox.ContentVerticalOffset >= ScrollBox.ActualHeight - 20)
+                        {
+                            if (!MainWindow.NextStepButton.IsEnabled)
+                            {
+                                MainWindow.EnableNext();
+                            }
+                        }
+                    }
+                };
             }
             catch
             {
@@ -52,10 +69,11 @@ namespace BlazamSetup.Steps
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
             base.OnVisualParentChanged(oldParent);
-            if(oldParent==null)
+            if (oldParent == null)
+            {
                 MainWindow.SetNextText("I Agree");
-
-
+                MainWindow.SetActionLabel("Scroll to bottom of license to agree");
+            }
         }
 
 
