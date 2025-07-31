@@ -59,21 +59,29 @@ namespace BlazamSetup.Services
             return false;
 
         }
-        internal static bool CheckForWebSockets()
+        private static bool IsFeatureEnabled(string featureName)
         {
             ManagementClass objMC = new ManagementClass("Win32_OptionalFeature");
             ManagementObjectCollection objMOC = objMC.GetInstances();
             foreach (ManagementObject objMO in objMOC)
             {
-                string featureName = (string)objMO.Properties["Name"].Value;
-                if (featureName.Equals("IIS-WebSockets", StringComparison.InvariantCultureIgnoreCase))
+                string name = (string)objMO.Properties["Name"].Value;
+                if (name.Equals(featureName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var path = (uint)objMO.Properties["InstallState"].Value;
-                    return path.Equals(1);
+                    var installState = (uint)objMO.Properties["InstallState"].Value;
+                    return installState.Equals(1);
                 }
-                
             }
             return false;
+        }
+
+        internal static bool CheckForWebSockets()
+        {
+            return IsFeatureEnabled("IIS-WebSockets");
+        }
+        internal static bool CheckForApplicationInitializationModule()
+        {
+            return IsFeatureEnabled("IIS-ApplicationInit");
         }
     }
 }

@@ -37,6 +37,7 @@ namespace BlazamSetup.Steps
             DataContext = this;
             CheckForAspCoreHosting();
             CheckForWebSockets();
+            CheckForAppInit();
         }
        
         void CheckForAspCoreHosting()
@@ -89,6 +90,25 @@ namespace BlazamSetup.Steps
 
         }
 
+        void CheckForAppInit()
+        {
+            if (PrerequisiteChecker.CheckForApplicationInitializationModule())
+            {
+                CurrentDispatcher.Invoke(() => {
+                    appInitCheckbox.IsChecked = true;
+                    enableAppInitButton.IsEnabled = false;
+                });
+            }
+            else
+            {
+                CurrentDispatcher.Invoke(() => {
+                    appInitCheckbox.IsChecked = false;
+                    enableAppInitButton.IsEnabled = true;
+                });
+            }
+            UpdateNextButton();
+        }
+
         IInstallationStep IInstallationStep.NextStep()
         {
             return new ConfigureIIS();
@@ -104,7 +124,7 @@ namespace BlazamSetup.Steps
         {
             CurrentDispatcher.Invoke(() => {
                 enableWebSocketsButton.IsEnabled = false;
-                websocketProgressBar.Visibility = Visibility.Visible;
+                progressBar.Visibility = Visibility.Visible;
             });
             try
             {
@@ -118,9 +138,33 @@ namespace BlazamSetup.Steps
                 
             }
             CurrentDispatcher.Invoke(() => {
-                websocketProgressBar.Visibility = Visibility.Hidden;
+                progressBar.Visibility = Visibility.Hidden;
             });
             CheckForWebSockets();
+        }
+
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            CurrentDispatcher.Invoke(() => {
+                enableAppInitButton.IsEnabled = false;
+                progressBar.Visibility = Visibility.Visible;
+            });
+            try
+            {
+                await Task.Run(() => {
+                    var dism = Process.Start("Dism", "/online /Enable-Feature /FeatureName:IIS-ApplicationInit /All");
+                    dism.WaitForExit();
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            CurrentDispatcher.Invoke(() => {
+                progressBar.Visibility = Visibility.Hidden;
+            });
+            CheckForAppInit();
         }
     }
 }

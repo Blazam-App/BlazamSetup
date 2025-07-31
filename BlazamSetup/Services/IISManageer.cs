@@ -32,6 +32,16 @@ namespace BlazamSetup.Services
 
                     Log.Information("IIS Site {@Site}", site);
 
+                    if (PrerequisiteChecker.CheckForApplicationInitializationModule())
+                    {
+                        Log.Information("Application Initialization Module found, setting preload and always running");
+                        site.ApplicationDefaults.ApplicationPoolName = "Blazam";
+                        ApplicationPool appPool = serverManager.ApplicationPools["Blazam"];
+                        appPool.StartMode = StartMode.AlwaysRunning;
+                        site.Applications[0].PreloadEnabled = true;
+                    }
+
+
                     serverManager.CommitChanges();
 
                     SecurityIdentifier iisIUSRSsid;
