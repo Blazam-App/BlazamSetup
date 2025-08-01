@@ -10,12 +10,13 @@
         <local:StepTitle Title="Installation Directory"/>
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="Blazam will be installed to the following directory..."/>
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                 <TextBox x:Name="directoryTextBox" TextWrapping="Wrap" Text="TextBox" Width="315" VerticalAlignment="Center"/>
             <Button Content="Browse" Click="Button_Click"/>
             </StackPanel>
-            <Label Content="Blazam will be installed to the following directory..."/>
 
         </StackPanel>
     </Grid>

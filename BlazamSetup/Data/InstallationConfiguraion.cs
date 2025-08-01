@@ -11,7 +11,7 @@ namespace BlazamSetup
     public enum InstallType { IIS, Service }
     public enum InstalledAction { Update, Repair,Remove}
     public enum DBType { Sqlite, SQL, MySQL }
-    internal static class InstallationConfiguraion
+    public static class InstallationConfiguraion
     {
         /// <summary>
         /// This value identifies the application, it should never change
@@ -27,7 +27,7 @@ namespace BlazamSetup
 
 
 
-        internal static WebHostConfiguration WebHostConfiguration = new WebHostConfiguration();
+        public static WebHostConfiguration WebHostConfiguration = new WebHostConfiguration();
         private static string installDirPath;
 
         internal static DBType? DatabaseType { get; set; } = null;
@@ -35,7 +35,7 @@ namespace BlazamSetup
         /// <summary>
         /// The path to install to, or already installed at.
         /// </summary>
-        internal static string InstallDirPath
+        public static string InstallDirPath
         {
             get => installDirPath; set
             {

@@ -52,7 +52,11 @@ namespace BlazamSetup.Steps
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new FolderPicker() { InputPath = InstallationConfiguraion.InstallDirPath };
+            var path="";
+            if (Directory.Exists(directoryTextBox.Text)){
+                path = directoryTextBox.Text;
+            }
+            var dialog = new FolderPicker() { InputPath = path };
 
             if (dialog.ShowDialog() == true)
             {

@@ -50,9 +50,14 @@ namespace BlazamSetup.Services
                 }
                 else
                 {
-                    OnStepTitleChanged?.Invoke("Configuring IIS");
+                    OnStepTitleChanged?.Invoke("Install IIS Modules");
+                    if (!IISManager.EnablePrerequisites()) Rollback();
+
+
+                    OnStepTitleChanged?.Invoke("Configuring IIS Site");
                     OnProgress?.Invoke(0);
 
+                   
                     if (!IISManager.CreateApplication()) Rollback();
                     if (CancellationTokenSource.IsCancellationRequested) return;
 
@@ -65,6 +70,7 @@ namespace BlazamSetup.Services
 
                 //Post install steps
                 AppSettingsService.Copy();
+                OnProgress?.Invoke(20);
                 if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
                 {
                     SecurityIdentifier sid;
@@ -84,11 +90,13 @@ namespace BlazamSetup.Services
                             // This might lead to a failure later or be caught by Rollback() if AddPermission fails.
                             // Consider if a more direct Rollback() or cancellation is needed here.
                             // For now, proceeding to allow AddPermission to potentially fail.
-                            return; // Or handle more gracefully, e.g., Rollback(); CancellationTokenSource.Cancel(); return;
+                            sid = null; // Set sid to null to indicate failure in obtaining the SID
                         }
                     }
-
+                    OnProgress?.Invoke(23);
                     Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
+                    OnProgress?.Invoke(30);
+
                     if (sid != null) // Ensure sid was successfully created before attempting to use it
                     {
                         if (!FileSystemService.AddPermission(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory,
@@ -102,8 +110,11 @@ namespace BlazamSetup.Services
                         }
                     }
                 }
+                OnProgress?.Invoke(40);
                 AppSettingsService.Configure();
+                OnProgress?.Invoke(60);
                 InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation) / 1024);
+                OnProgress?.Invoke(80);
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");

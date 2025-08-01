@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazamSetup", "BlazamSetup\BlazamSetup.csproj", "{3B8AA4DF-AA94-44BF-8EC7-AE450BC1652B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazamSetup.Test", "BlazamSetup.Test\BlazamSetup.Test.csproj", "{990BCE63-C462-40A5-BED8-ECBEA9B2AECB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3B8AA4DF-AA94-44BF-8EC7-AE450BC1652B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B8AA4DF-AA94-44BF-8EC7-AE450BC1652B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B8AA4DF-AA94-44BF-8EC7-AE450BC1652B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{990BCE63-C462-40A5-BED8-ECBEA9B2AECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{990BCE63-C462-40A5-BED8-ECBEA9B2AECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{990BCE63-C462-40A5-BED8-ECBEA9B2AECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{990BCE63-C462-40A5-BED8-ECBEA9B2AECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

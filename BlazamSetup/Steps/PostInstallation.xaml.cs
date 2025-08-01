@@ -56,11 +56,24 @@ namespace BlazamSetup.Steps
                 {
                     ServiceManager.Start();
                 }
-
+                var hostname = "localhost";
+                if (InstallationConfiguraion.WebHostConfiguration.ListeningAddress != "*")
+                {
+                    hostname = InstallationConfiguraion.WebHostConfiguration.ListeningAddress;
+                }
                 Process browser = new Process();
                 browser.StartInfo.CreateNoWindow = true;
                 browser.StartInfo.FileName = "cmd.exe";
-                browser.StartInfo.Arguments = "/c start http://localhost/";
+                if (InstallationConfiguraion.WebHostConfiguration.SSLCert != null)
+                {
+                    browser.StartInfo.Arguments = "/c start https://"+hostname+"/";
+
+                }
+                else
+                {
+                    browser.StartInfo.Arguments = "/c start http://"+hostname+"/";
+
+                }
                 browser.Start();
             }
            return new ExitStep();
