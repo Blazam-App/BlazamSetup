@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.Administration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -81,7 +82,7 @@ namespace BlazamSetup.Services
         }
         internal static bool CheckForApplicationInitializationModule()
         {
-            return IsFeatureEnabled("IIS-ApplicationInit");
+                return IsFeatureEnabled("IIS-ApplicationInit");
         }
     }
 }

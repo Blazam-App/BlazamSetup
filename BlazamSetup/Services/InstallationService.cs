@@ -53,6 +53,7 @@ namespace BlazamSetup.Services
                     OnStepTitleChanged?.Invoke("Configuring IIS");
                     OnProgress?.Invoke(0);
 
+                    if (!IISManager.EnablePrerequisites()) Rollback();
                     if (!IISManager.CreateApplication()) Rollback();
                     if (CancellationTokenSource.IsCancellationRequested) return;
 

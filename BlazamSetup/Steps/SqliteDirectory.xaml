@@ -10,7 +10,7 @@
         <local:StepTitle Title="Sqlite Directory"/>
         <StackPanel Margin="10,40,0,0" >
             <Label Content="Do not place the Sqlite Database file in the application installation directory."/>
-            <Label Content="The recommended directory is  'C:\ProgramData'"/>
+            <Label Content="The recommended directory is  'C:\ProgramData\Blazam'"/>
              
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
