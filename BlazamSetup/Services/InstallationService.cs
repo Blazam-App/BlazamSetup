@@ -22,7 +22,7 @@ namespace BlazamSetup.Services
 
         internal static async Task StartInstallationAsync()
         {
-            Log.Information("Installation Started {@InstallationType} {@InstallDirPath} {@DatabaseConfiguration}", InstallationConfiguraion.InstallationType, InstallationConfiguraion.InstallDirPath, InstallationConfiguraion.DatabaseConfiguration);
+            Log.Information("Installation Started {@InstallationType} {@InstallDirPath}", InstallationConfiguraion.InstallationType, InstallationConfiguraion.InstallDirPath);
 
             if (!await PreInstallation()) Rollback();
             if (CancellationTokenSource.IsCancellationRequested) return;
