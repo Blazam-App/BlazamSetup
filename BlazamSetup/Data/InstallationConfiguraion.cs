@@ -1,15 +1,10 @@
-﻿using BlazamSetup.Steps;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazamSetup
 {
     public enum InstallType { IIS, Service }
-    public enum InstalledAction { Update, Repair,Remove}
+    public enum InstalledAction { Update, Repair, Remove }
     public enum DBType { Sqlite, SQL, MySQL }
     public static class InstallationConfiguraion
     {
@@ -39,14 +34,13 @@ namespace BlazamSetup
         {
             get => installDirPath; set
             {
-                installDirPath = Path.GetFullPath(value + "\\"); 
-                ProductInformation.InstallLocation = Path.GetFullPath(value+"\\");
-                ProductInformation.UninstallString = '"'+Path.GetFullPath(value+"\\setup.exe")+"\" /u";
+                installDirPath = Path.GetFullPath(value + "\\");
+                ProductInformation.InstallLocation = Path.GetFullPath(value + "\\");
+                ProductInformation.UninstallString = '"' + Path.GetFullPath(value + "\\setup.exe") + "\" /u";
             }
         }
         internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();
-        [Obsolete("Not used because I decided to just force a default identity.")]
-        public static object ApplicationIdentity { get; internal set; }
+
         public static string ProgramDataDir => Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + Path.DirectorySeparatorChar + "Blazam";
 
         /// <summary>

@@ -1,12 +1,7 @@
-﻿using Microsoft.Win32;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace BlazamSetup.Services
 {
@@ -14,7 +9,7 @@ namespace BlazamSetup.Services
     {
         private static RegistryKey Hive => Registry.LocalMachine;
         private static string UninstallKey => @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\";
-        private static string ProductUninstallKey => UninstallKey +'{'+ InstallationConfiguraion.ProductGuid + @"}\";
+        private static string ProductUninstallKey => UninstallKey + '{' + InstallationConfiguraion.ProductGuid + @"}\";
 
 
         internal static ProductInformation GetProductInformation()
@@ -59,7 +54,8 @@ namespace BlazamSetup.Services
                         key.SetValue(property.Name, value);
                 }
                 return true;
-            }catch(SecurityException ex)
+            }
+            catch (SecurityException)
             {
                 MessageBox.Show("Registry access not authorized");
                 return false;
@@ -72,15 +68,15 @@ namespace BlazamSetup.Services
                 try
                 {
                     var key = OpenKey();
-                    if(key==null) return false;
+                    if (key == null) return false;
                     var installDate = key.GetValue("InstallDate");
-                    if(installDate is string && !((string)installDate).IsNullOrEmpty())
+                    if (installDate is string && !((string)installDate).IsNullOrEmpty())
                     {
                         return true;
                     }
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -101,7 +97,7 @@ namespace BlazamSetup.Services
                     }
                     return null;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -114,7 +110,7 @@ namespace BlazamSetup.Services
                 Hive.CreateSubKey(ProductUninstallKey);
                 return true;
             }
-            catch (Exception e) { return false; }
+            catch (Exception) { return false; }
         }
 
         public static bool DeleteUninstallKey()
@@ -124,7 +120,7 @@ namespace BlazamSetup.Services
                 Hive.DeleteSubKey(ProductUninstallKey);
                 return true;
             }
-            catch (Exception e) { return false; }
+            catch (Exception) { return false; }
         }
         private static RegistryKey OpenKey(bool write = false)
         {

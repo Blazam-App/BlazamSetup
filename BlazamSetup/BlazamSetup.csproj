@@ -413,9 +413,6 @@
     <Compile Include="Steps\ConfigureDatabaseConnection.xaml.cs">
       <DependentUpon>ConfigureDatabaseConnection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Steps\ConfigureIdentity.xaml.cs">
-      <DependentUpon>ConfigureIdentity.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Steps\ConfigureIIS.xaml.cs">
       <DependentUpon>ConfigureIIS.xaml</DependentUpon>
     </Compile>
@@ -513,10 +510,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Steps\ConfigureDatabaseConnection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Steps\ConfigureIdentity.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
