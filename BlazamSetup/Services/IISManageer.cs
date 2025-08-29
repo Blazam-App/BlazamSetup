@@ -1,14 +1,11 @@
-﻿using Microsoft.AppCenter.Ingestion.Models.Serialization;
-using Microsoft.Web.Administration;
-using Org.BouncyCastle.Bcpg.OpenPgp;
-using Serilog;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Microsoft.Web.Administration;
+using Serilog;
 
 namespace BlazamSetup.Services
 {
@@ -116,7 +113,7 @@ namespace BlazamSetup.Services
                 }
                 catch (IdentityNotMappedException ex)
                 {
-                    Log.Error("Failed to translate IIS_IUSRS to SID. IIS may not be installed or configured correctly. {@Error}", ex);
+                    Log.Error(ex, "Failed to translate IIS_IUSRS to SID. IIS may not be installed or configured correctly.");
                     return false;
                 }
 
@@ -173,7 +170,7 @@ namespace BlazamSetup.Services
                 string certStoreName = "My";
 
                 // Add the new HTTPS binding.
-                Binding newBinding = site.Bindings.Add(httpsBindingInfo, certHash, certStoreName);
+                site.Bindings.Add(httpsBindingInfo, certHash, certStoreName);
 
                 //newBinding.SetAttributeValue("sslFlags", 1); // 1 = SslFlags.Sni
 
@@ -207,7 +204,6 @@ namespace BlazamSetup.Services
                 using (ServerManager serverManager = new ServerManager())
                 {
                     Log.Information("IIS Connected");
-                    string httpBinding = InstallationConfiguraion.WebHostConfiguration.ListeningAddress + ":" + InstallationConfiguraion.WebHostConfiguration.HttpPort + ":";
                     Site site = serverManager.Sites.FirstOrDefault(s => s.Name == "Blazam");
                     if (site is null)
                     {
@@ -242,7 +238,6 @@ namespace BlazamSetup.Services
                 using (ServerManager serverManager = new ServerManager())
                 {
                     Log.Information("IIS Connected");
-                    string httpBinding = InstallationConfiguraion.WebHostConfiguration.ListeningAddress + ":" + InstallationConfiguraion.WebHostConfiguration.HttpPort + ":";
                     Site site = serverManager.Sites.FirstOrDefault(s => s.Name == "Blazam");
                     if (site is null)
                     {

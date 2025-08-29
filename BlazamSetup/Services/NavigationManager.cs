@@ -1,10 +1,5 @@
-﻿using BlazamSetup.Steps;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System;
+using BlazamSetup.Steps;
 
 namespace BlazamSetup.Services
 {
@@ -36,15 +31,10 @@ namespace BlazamSetup.Services
                 OnPageChanged?.Invoke(CurrentPage);
 
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-
+                // No more pages in back navigation history
             }
-        }
-
-        public static void Quit()
-        {
-
         }
 
     }

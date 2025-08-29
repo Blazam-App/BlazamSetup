@@ -22,7 +22,7 @@ namespace BlazamSetup
 
 
 
-        public static WebHostConfiguration WebHostConfiguration = new WebHostConfiguration();
+        public static WebHostConfiguration WebHostConfiguration { get; } = new WebHostConfiguration();
         private static string installDirPath;
 
         internal static DBType? DatabaseType { get; set; } = null;
@@ -34,9 +34,9 @@ namespace BlazamSetup
         {
             get => installDirPath; set
             {
-                installDirPath = Path.GetFullPath(value + "\\");
-                ProductInformation.InstallLocation = Path.GetFullPath(value + "\\");
-                ProductInformation.UninstallString = '"' + Path.GetFullPath(value + "\\setup.exe") + "\" /u";
+                installDirPath = Path.GetFullPath(value + Path.DirectorySeparatorChar);
+                ProductInformation.InstallLocation = Path.GetFullPath(value + Path.DirectorySeparatorChar);
+                ProductInformation.UninstallString = '"' + Path.GetFullPath(value + Path.DirectorySeparatorChar + "setup.exe") + "\" /u";
             }
         }
         internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();
@@ -46,7 +46,7 @@ namespace BlazamSetup
         /// <summary>
         /// The path %temp%\BlazamSetup\
         /// </summary>
-        public static string SetupTempDirectory => Path.GetTempPath() + "BlazamSetup\\";
+        public static string SetupTempDirectory => Path.GetTempPath() + "BlazamSetup" + Path.DirectorySeparatorChar;
 
         public static InstalledAction InstalledAction { get; internal set; }
         public static string InstalledVersion { get; internal set; }

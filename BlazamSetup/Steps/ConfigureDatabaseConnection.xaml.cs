@@ -1,23 +1,9 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MySql.Data.MySqlClient;
 
 namespace BlazamSetup.Steps
 {
@@ -165,7 +151,10 @@ namespace BlazamSetup.Steps
             {
                 InstallationConfiguraion.DatabaseConfiguration.Port = int.Parse(PortTextBox.Text);
             }
-            catch { }
+            catch
+            {
+                //ignore
+            }
             TestFailed();
 
         }
