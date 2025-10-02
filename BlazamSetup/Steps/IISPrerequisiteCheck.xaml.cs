@@ -49,6 +49,11 @@ namespace BlazamSetup.Steps
             UpdateNextButton();
         }
 
+        private void Recheck_Click(object sender, RoutedEventArgs e)
+        {
+            CheckForAspCoreHosting();
+        }
+
         private void UpdateNextButton()
         {
             CurrentDispatcher.Invoke(() =>

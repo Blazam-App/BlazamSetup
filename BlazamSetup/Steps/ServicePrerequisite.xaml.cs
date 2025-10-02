@@ -1,20 +1,8 @@
-﻿using BlazamSetup.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using BlazamSetup.Services;
 
 namespace BlazamSetup.Steps
 {
@@ -39,14 +27,19 @@ namespace BlazamSetup.Steps
 
             if (PrerequisiteChecker.CheckForAspCore())
             {
-                CurrentDispatcher.Invoke(() => {
+                CurrentDispatcher.Invoke(() =>
+                {
                     frameworkCheckbox.IsChecked = true;
+                    MainWindow.EnableNext();
                 });
             }
             else
             {
-                CurrentDispatcher.Invoke(() => {
+                CurrentDispatcher.Invoke(() =>
+                {
                     frameworkCheckbox.IsChecked = false;
+                    MainWindow.DisableNext();
+
                 });
             }
 
@@ -64,6 +57,11 @@ namespace BlazamSetup.Steps
 
             Process.Start("https://aka.ms/dotnet-download");
 
-        }   
+        }
+
+        private void Recheck_Click(object sender, RoutedEventArgs e)
+        {
+            CheckForAspCoreRuntime();
+        }
     }
 }
