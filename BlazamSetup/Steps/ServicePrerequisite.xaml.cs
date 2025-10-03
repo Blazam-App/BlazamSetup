@@ -51,12 +51,26 @@ namespace BlazamSetup.Steps
             return new ConfigureService();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-
-
-            Process.Start("https://aka.ms/dotnet-download");
-
+            DownloadButton.IsEnabled = false;
+            RecheckButton.IsEnabled = false;
+            DownloadButton.Content = "Downloading/Installing...";
+            try
+            {
+                await DependencyManager.DownloadAndInstallAspNetCoreRuntime();
+                CheckForAspCoreRuntime();
+            }
+            catch
+            {
+                MessageBox.Show("Failed to download or install the ASP.NET Core Runtime. Please try again or install it manually.", "Error");
+            }
+            finally
+            {
+                DownloadButton.Content = "Download Prerequisites";
+                DownloadButton.IsEnabled = true;
+                RecheckButton.IsEnabled = true;
+            }
         }
 
         private void Recheck_Click(object sender, RoutedEventArgs e)

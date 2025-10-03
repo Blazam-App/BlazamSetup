@@ -402,6 +402,7 @@
     </Compile>
     <Compile Include="Services\ApplicationUpdateException.cs" />
     <Compile Include="Services\AppSettingsService.cs" />
+    <Compile Include="Services\DependencyManager.cs" />
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\FileSystemService.cs" />
     <Compile Include="Services\IISManageer.cs" />

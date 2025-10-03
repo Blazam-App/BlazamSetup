@@ -19,8 +19,8 @@
         <StackPanel Margin="10,150,10,0" VerticalAlignment="Bottom">
             <ProgressBar Margin="0,0,0,10" Height="5" x:Name="progressBar" IsIndeterminate="true" Visibility="Hidden"/>
             <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
-                <Button  VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Download Prerequisites" Click="Button_Click"  />
-                <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10,0,0,0" Content="Recheck" Click="Recheck_Click"  />
+                <Button x:Name="DownloadButton" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Download Prerequisites" Click="Button_Click"  />
+                <Button x:Name="RecheckButton" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10,0,0,0" Content="Recheck" Click="Recheck_Click"  />
             </StackPanel>
         </StackPanel>
 
