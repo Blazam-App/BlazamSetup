@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("BlazamSetup")]
 [assembly: AssemblyDescription("Installs Blazam from the web")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Blazam-App")]
+[assembly: AssemblyCompany("Jacobsen Productions LLC")]
 [assembly: AssemblyProduct("BlazamSetup")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
@@ -51,5 +51,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.7.1.0")]
-[assembly: AssemblyFileVersion("1.7.1.0")]
+[assembly: AssemblyVersion("1.8.0.0")]
+[assembly: AssemblyFileVersion("1.8.0.0")]
