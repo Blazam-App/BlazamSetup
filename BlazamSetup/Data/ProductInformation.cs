@@ -9,7 +9,10 @@ namespace BlazamSetup
     /// </summary>
     internal class ProductInformation
     {
+        private static string SetupPath => Path.GetFullPath(Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam") + Path.DirectorySeparatorChar + "setup" + Path.DirectorySeparatorChar + "setup.exe");
+
         public string DisplayName { get; set; } = "Blazam";
+        public string DisplayIcon { get; set; } = SetupPath + ",0";
         public string Publisher { get; set; } = "blazam.org";
         public string DisplayVersion { get; set; } = "1.0";
         public string Comments { get; set; } = " A web based Active Directry management portal";
@@ -19,7 +22,7 @@ namespace BlazamSetup
         public string HelpLink { get; set; } = "https://blazam.org";
         public int Language { get; set; } = 1033;
         public string Size { get; set; }
-        public string UninstallString { get; set; } = '"' + Path.GetFullPath(Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam") + Path.DirectorySeparatorChar + "setup" + Path.DirectorySeparatorChar + "setup.exe") + "\" /u";
+        public string UninstallString { get; set; } = '"' + SetupPath + "\" /u";
         public string InstallLocation { get; set; } = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam");
         public string InstallDate { get; set; } = DateTime.UtcNow.Year + DateTime.UtcNow.Month.ToString("00") + DateTime.UtcNow.Day.ToString("00");
         public long Version { get; set; }

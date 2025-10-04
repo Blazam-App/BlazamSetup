@@ -37,6 +37,7 @@ namespace BlazamSetup
                 installDirPath = Path.GetFullPath(value + Path.DirectorySeparatorChar);
                 ProductInformation.InstallLocation = Path.GetFullPath(value + Path.DirectorySeparatorChar);
                 ProductInformation.UninstallString = '"' + Path.GetFullPath(value + Path.DirectorySeparatorChar + "setup" + Path.DirectorySeparatorChar + "setup.exe") + "\" /u";
+                ProductInformation.DisplayIcon = Path.GetFullPath(value + Path.DirectorySeparatorChar + "setup" + Path.DirectorySeparatorChar + "setup.exe") + ",0";
             }
         }
         internal static DatabaseConfiguration DatabaseConfiguration { get; set; } = new DatabaseConfiguration();
