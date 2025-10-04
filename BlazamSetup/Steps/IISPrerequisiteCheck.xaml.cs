@@ -73,10 +73,29 @@ namespace BlazamSetup.Steps
             return new ConfigureIIS();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            DownloadButton.IsEnabled = false;
+            RecheckButton.IsEnabled = false;
+            DownloadButton.Content = "Downloading/Installing...";
+            progressBar.Visibility = Visibility.Visible;
 
-            Process.Start(DotNetDownloadUrl);
+            try
+            {
+                await DependencyManager.DownloadAndInstallHostingBundle();
+                CheckForAspCoreHosting();
+            }
+            catch
+            {
+                MessageBox.Show("Failed to download or install the ASP.NET Core Hosting Bundle. Please try again or install it manually.", "Error");
+            }
+            finally
+            {
+                DownloadButton.Content = "Download Prerequisites";
+                DownloadButton.IsEnabled = true;
+                RecheckButton.IsEnabled = true;
+                progressBar.Visibility = Visibility.Hidden;
+            }
         }
 
     }

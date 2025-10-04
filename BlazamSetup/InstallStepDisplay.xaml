@@ -13,7 +13,6 @@
             <local:InstallStepControl x:Name="License" Order="1" Label="License"/>
             <local:InstallStepControl x:Name="Download" Order="2" Label="Download"/>
             <local:InstallStepControl x:Name="HostType"  Order="3" Label="Host Type"/>
-            <local:InstallStepControl x:Name="Prerequisites" Order="4" Label="Prerequisites"/>
             <local:InstallStepControl x:Name="HostConfig" Order="5" Label="Host Config"/>
             <local:InstallStepControl x:Name="Directory" Order="6" Label="Directory"/>
             <local:InstallStepControl x:Name="DBType" Order="7" Label="DB Type"/>

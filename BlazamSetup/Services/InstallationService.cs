@@ -1,15 +1,12 @@
-﻿using Serilog;
-using SQLitePCL;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace BlazamSetup.Services
 {
@@ -36,17 +33,32 @@ namespace BlazamSetup.Services
 
                 if (!CreateProgramDataDirectory()) Rollback();
                 if (CancellationTokenSource.IsCancellationRequested) return;
+                if (!PrerequisiteChecker.CheckForAspCoreHosting())
+                {
+                    try
+                    {
+                        OnStepTitleChanged?.Invoke("Install ASP Net Core Hosting Bundle");
+                        OnProgress?.Invoke(0);
+                        DependencyManager.DownloadAndInstallHostingBundle().Wait();
 
+                        OnProgress?.Invoke(33);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Failed to install ASP.NET Core Hosting Bundle {@Error}", ex);
+                        Rollback();
+                    }
+                }
 
                 if (InstallationConfiguraion.InstallationType == InstallType.Service)
                 {
                     OnStepTitleChanged?.Invoke("Install Services");
-                    OnProgress?.Invoke(0);
+                    OnProgress?.Invoke(40);
                     if (!ServiceManager.Install()) Rollback();
                     if (CancellationTokenSource.IsCancellationRequested) return;
 
 
-                    OnProgress?.Invoke(100);
+                    OnProgress?.Invoke(66);
                 }
                 else
                 {
@@ -55,22 +67,22 @@ namespace BlazamSetup.Services
 
 
                     OnStepTitleChanged?.Invoke("Configuring IIS Site");
-                    OnProgress?.Invoke(0);
+                    OnProgress?.Invoke(40);
 
-                   
+
                     if (!IISManager.CreateApplication()) Rollback();
                     if (CancellationTokenSource.IsCancellationRequested) return;
 
-                    OnProgress?.Invoke(100);
+                    OnProgress?.Invoke(66);
 
                 }
                 OnStepTitleChanged?.Invoke("Finishing Installation");
-                OnProgress?.Invoke(0);
+                OnProgress?.Invoke(70);
                 if (CancellationTokenSource.IsCancellationRequested) return;
 
                 //Post install steps
                 AppSettingsService.Copy();
-                OnProgress?.Invoke(20);
+                OnProgress?.Invoke(75);
                 if (InstallationConfiguraion.DatabaseType == DBType.Sqlite)
                 {
                     SecurityIdentifier sid;
@@ -93,9 +105,9 @@ namespace BlazamSetup.Services
                             sid = null; // Set sid to null to indicate failure in obtaining the SID
                         }
                     }
-                    OnProgress?.Invoke(23);
+                    OnProgress?.Invoke(80);
                     Directory.CreateDirectory(InstallationConfiguraion.DatabaseConfiguration.SqliteDirectory);
-                    OnProgress?.Invoke(30);
+                    OnProgress?.Invoke(85);
 
                     if (sid != null) // Ensure sid was successfully created before attempting to use it
                     {
@@ -110,11 +122,11 @@ namespace BlazamSetup.Services
                         }
                     }
                 }
-                OnProgress?.Invoke(40);
+                OnProgress?.Invoke(90);
                 AppSettingsService.Configure();
-                OnProgress?.Invoke(60);
+                OnProgress?.Invoke(96);
                 InstallationConfiguraion.ProductInformation.EstimatedSize = (int)(FileSystemService.GetDirectorySize(InstallationConfiguraion.ProductInformation.InstallLocation) / 1024);
-                OnProgress?.Invoke(80);
+                OnProgress?.Invoke(97);
                 RegistryService.SetProductInformation(InstallationConfiguraion.ProductInformation);
                 OnProgress?.Invoke(100);
                 OnStepTitleChanged?.Invoke("Installation Finished");
@@ -251,7 +263,8 @@ namespace BlazamSetup.Services
         private static void CopySetup(string targetDirectory)
         {
             var setupPath = Assembly.GetExecutingAssembly().Location;
-            var destPath = targetDirectory + "setup.exe";
+            var destPath = Path.Combine(targetDirectory + "setup", "setup.exe");
+            Directory.CreateDirectory(Path.GetDirectoryName(destPath));
             Log.Information("Copying file: " + destPath);
 
             File.Copy(setupPath, destPath, true);
@@ -327,9 +340,15 @@ namespace BlazamSetup.Services
                 var fileIndex = 0;
                 foreach (var subFolder in Directory.GetDirectories(installPath))
                 {
-                    fileIndex = DeleteFolder(subFolder, fileIndex);
-                    Directory.Delete(subFolder);
-
+                    try
+                    {
+                        fileIndex = DeleteFolder(subFolder, fileIndex);
+                        Directory.Delete(subFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error removing application folder {@Folder} {@Exception}", subFolder, ex);
+                    }
                 }
                 foreach (var file in Directory.GetFiles(installPath))
                 {

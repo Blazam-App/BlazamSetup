@@ -1,42 +1,37 @@
-﻿using Microsoft.Web.Administration;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Management;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BlazamSetup.Services
 {
-    internal static  class PrerequisiteChecker
+    internal static class PrerequisiteChecker
     {
         internal static bool CheckForAspCore()
         {
+
             try
             {
-                var dirs = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\dotnet\\shared\\Microsoft.NETCore.App");
-                if (dirs != null && dirs.Length > 0)
+                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\Updates\\.NET\\");
+                if (key != null)
                 {
-
-                    foreach (var dir in dirs)
+                    var possibleAspKeys = key.GetSubKeyNames();
+                    if (possibleAspKeys.Length > 0)
                     {
-                        if (dir.Contains("8."))
+                        foreach (var possibleKey in possibleAspKeys)
                         {
-                            
-
-                            return true;
+                            if (possibleKey.Contains("Microsoft ASP.NET Core 8"))
+                            {
+                                return true;
+                            }
                         }
                     }
-
                 }
             }
             catch { }
             return false;
+
+
         }
-      internal static bool CheckForAspCoreHosting()
+        internal static bool CheckForAspCoreHosting()
         {
             try
             {
@@ -48,7 +43,7 @@ namespace BlazamSetup.Services
                     {
                         foreach (var possibleKey in possibleAspKeys)
                         {
-                            if (possibleKey.Contains("Microsoft .NET 8") && possibleKey.Contains("Hosting"))
+                            if ((possibleKey.Contains("Microsoft ASP.NET Core 8") || possibleKey.Contains("Microsoft .NET 8")) && possibleKey.Contains("Hosting"))
                             {
                                 return true;
                             }
@@ -82,7 +77,7 @@ namespace BlazamSetup.Services
         }
         internal static bool CheckForApplicationInitializationModule()
         {
-                return IsFeatureEnabled("IIS-ApplicationInit");
+            return IsFeatureEnabled("IIS-ApplicationInit");
         }
     }
 }

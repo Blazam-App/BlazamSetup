@@ -12,8 +12,8 @@
         <CheckBox x:Name="frameworkCheckbox" IsEnabled="false" Content="ASP .NET 8 Core Runtime" Margin="10,40,0,0"/>
 
         <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <Button  VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Download Prerequisites" Click="Button_Click"  />
-            <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10,0,0,0" Content="Recheck" Click="Recheck_Click"  />
+            <Button x:Name="DownloadButton" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Download Prerequisites" Click="Button_Click"  />
+            <Button x:Name="RecheckButton" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10,0,0,0" Content="Recheck" Click="Recheck_Click"  />
         </StackPanel>
     </Grid>
 </UserControl>
