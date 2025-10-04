@@ -15,7 +15,7 @@ namespace BlazamSetup
         public string DisplayIcon { get; set; } = SetupPath + ",0";
         public string Publisher { get; set; } = "Jacobsen Productions LLC";
         public string DisplayVersion { get; set; } = "1.0";
-        public string Comments { get; set; } = " A web based Active Directry management portal";
+        public string Comments { get; set; } = " A web based Active Directory management portal";
         public int NoRepair { get; set; } = 0;
         public int NoModify { get; set; } = 1;
         public string Contact { get; set; } = "Blazam Support";
