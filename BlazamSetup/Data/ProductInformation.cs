@@ -1,7 +1,5 @@
-﻿using Octokit;
-using System;
+﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace BlazamSetup
 {
@@ -21,8 +19,8 @@ namespace BlazamSetup
         public string HelpLink { get; set; } = "https://blazam.org";
         public int Language { get; set; } = 1033;
         public string Size { get; set; }
-        public string UninstallString { get; set; }= '"' + Path.GetFullPath(Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam") + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar + "setup.exe")+"\" /u"  ;
-        public string InstallLocation { get; set; }= Path.GetFullPath(InstallationConfiguraion.InstallDirPath+Path.DirectorySeparatorChar + "Blazam");
+        public string UninstallString { get; set; } = '"' + Path.GetFullPath(Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam") + Path.DirectorySeparatorChar + "setup" + Path.DirectorySeparatorChar + "setup.exe") + "\" /u";
+        public string InstallLocation { get; set; } = Path.GetFullPath(InstallationConfiguraion.InstallDirPath + Path.DirectorySeparatorChar + "Blazam");
         public string InstallDate { get; set; } = DateTime.UtcNow.Year + DateTime.UtcNow.Month.ToString("00") + DateTime.UtcNow.Day.ToString("00");
         public long Version { get; set; }
         public int EstimatedSize { get; set; }
