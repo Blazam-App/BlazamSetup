@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Diagnostics;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BlazamSetup.Steps.Uninstall
 {
@@ -33,6 +21,20 @@ namespace BlazamSetup.Steps.Uninstall
         IInstallationStep IInstallationStep.NextStep()
         {
             // This will cause the application to quit when ExitStep is instantiated.
+            // Get the path to the installation directory
+            string installDir = InstallationConfiguraion.InstallDirPath;
+
+            // Build the command to recursively delete the installation directory after a short delay
+            string cmdArgs = $"/C ping 127.0.0.1 -n 2 > nul & rmdir /S /Q \"{installDir}\"";
+
+            // Start the command process (hidden window)
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = cmdArgs,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true
+            });
             return new ExitStep();
         }
     }
