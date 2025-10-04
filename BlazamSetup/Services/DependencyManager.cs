@@ -1,17 +1,17 @@
-using Serilog;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace BlazamSetup.Services
 {
     internal static class DependencyManager
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string AspNetCoreRuntimeUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.20-windows-x64-installer";
-        private const string AspNetCoreHostingBundleUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.20-windows-hosting-bundle-installer";
+        private const string AspNetCoreRuntimeUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.20/aspnetcore-runtime-8.0.20-win-x64.exe";
+        private const string AspNetCoreHostingBundleUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.20/dotnet-hosting-8.0.20-win.exe";
 
         public static async Task DownloadAndInstallAspNetCoreRuntime()
         {
@@ -51,7 +51,7 @@ namespace BlazamSetup.Services
                 };
 
                 process.Start();
-                await process.WaitForExitAsync();
+                process.WaitForExit();
 
                 Log.Information($"{fileName} installation completed.");
             }
