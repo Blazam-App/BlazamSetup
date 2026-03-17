@@ -174,18 +174,6 @@ namespace BlazamSetup
                 }
             };
 
-            // Catch exceptions from the main UI dispatcher thread.
-            // Typically we only need to catch this OR the Dispatcher.UnhandledException.
-            // Handling both can result in the exception getting handled twice.
-            //Application.Current.DispatcherUnhandledException += (sender, args) =>
-            //{
-            //	// If we are debugging, let Visual Studio handle the exception and take us to the code that threw it.
-            //	if (!Debugger.IsAttached)
-            //	{
-            //		args.Handled = true;
-            //		ShowUnhandledException(args.Exception, "Application.Current.DispatcherUnhandledException", true);
-            //	}
-            //};
         }
 
         void ShowUnhandledException(Exception e, string unhandledExceptionType, bool promptUserForShutdown)
