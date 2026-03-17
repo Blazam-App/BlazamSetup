@@ -10,17 +10,17 @@ namespace BlazamSetup.Services
     internal static class DependencyManager
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string AspNetCoreRuntimeUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.20/aspnetcore-runtime-8.0.20-win-x64.exe";
-        private const string AspNetCoreHostingBundleUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.20/dotnet-hosting-8.0.20-win.exe";
+        private const string AspNetCoreRuntimeUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/10.0.5/aspnetcore-runtime-10.0.5-win-x64.exe";
+        private const string AspNetCoreHostingBundleUrl = "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/10.0.5/dotnet-hosting-10.0.5-win.exe";
 
         public static async Task DownloadAndInstallAspNetCoreRuntime()
         {
-            await DownloadAndInstall(AspNetCoreRuntimeUrl, "aspnetcore-runtime-8.0.20-win-x64.exe");
+            await DownloadAndInstall(AspNetCoreRuntimeUrl, "aspnetcore-runtime-10.0.5-win-x64.exe");
         }
 
         public static async Task DownloadAndInstallHostingBundle()
         {
-            await DownloadAndInstall(AspNetCoreHostingBundleUrl, "dotnet-hosting-8.0.20-win.exe");
+            await DownloadAndInstall(AspNetCoreHostingBundleUrl, "dotnet-hosting-10.0.5-win.exe");
         }
 
         private static async Task DownloadAndInstall(string url, string fileName)
@@ -33,7 +33,7 @@ namespace BlazamSetup.Services
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
-                using (var fs = new FileStream(tempPath, System.IO.FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     await response.Content.CopyToAsync(fs);
                 }

@@ -18,7 +18,7 @@ namespace BlazamSetup.Services
                     {
                         foreach (var possibleKey in possibleAspKeys)
                         {
-                            if (possibleKey.Contains("Microsoft ASP.NET Core 8"))
+                            if (possibleKey.Contains("Microsoft ASP.NET Core 10"))
                             {
                                 return true;
                             }
@@ -43,7 +43,7 @@ namespace BlazamSetup.Services
                     {
                         foreach (var possibleKey in possibleAspKeys)
                         {
-                            if ((possibleKey.Contains("Microsoft ASP.NET Core 8") || possibleKey.Contains("Microsoft .NET 8")) && possibleKey.Contains("Hosting"))
+                            if ((possibleKey.Contains("Microsoft ASP.NET Core 10") || possibleKey.Contains("Microsoft .NET 10")) && possibleKey.Contains("Hosting"))
                             {
                                 return true;
                             }
