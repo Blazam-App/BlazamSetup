@@ -34,7 +34,7 @@ namespace BlazamSetup.Services
 
 
 
-            var branch = "release";
+            var branch = "net10";
             //Get the releases from the repo
             var releases = await githubclient.Repository.Release.GetAll("Blazam-App", "Blazam");
             //Filter the releases to the selected branch
